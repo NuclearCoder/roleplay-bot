@@ -10,7 +10,7 @@ class TimerKeepAlive : TimerTask() {
     private val timer = Timer("keep-alive", false)
 
     init {
-        timer.schedule(this, KEEP_ALIVE, KEEP_ALIVE)
+        timer.schedule(this, BOT_KEEP_ALIVE, BOT_KEEP_ALIVE)
     }
 
     override fun run() {

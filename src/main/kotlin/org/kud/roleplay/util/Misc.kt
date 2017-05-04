@@ -27,7 +27,8 @@ fun stringFromTime(time: Int): String {
 }
 
 fun parseTime(string: String): Int {
-    // that is probably an awful way to parse time
+    // that is probably an awful way to parse time,
+    // however it should be heaps more efficient than regular expressions
 
     val parts = string.split(':')
 

@@ -1,12 +1,12 @@
 package org.kud.roleplay.command
 
-import org.kud.roleplay.SimpleBot
+import org.kud.roleplay.RoleplayBot
 import org.kud.roleplay.command.manage.ExitCommand
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 
-class CommandManagerImpl(private val bot: SimpleBot) : CommandManager {
+class CommandManagerImpl(private val bot: RoleplayBot) : CommandManager {
 
-    val prefix = "hey nuke, "
+    val prefix = "-rp"
 
     private val commands: Map<String, Command> = mapOf(
             "exit" to ExitCommand()
@@ -17,12 +17,18 @@ class CommandManagerImpl(private val bot: SimpleBot) : CommandManager {
         val content = message.content
 
         if (content.startsWith(prefix)) {
-            val args = content.substring(prefix.length).split(' ').dropLastWhile(String::isEmpty).toTypedArray()
-            val name = args[0]
+            // drop 1 to get rid of the prefix
+            val args = content.split("\\s+").drop(1).dropLastWhile(String::isEmpty).toTypedArray()
 
-            val command = commands[name] ?: return
+            if (args.isEmpty()) {
 
-            command.execute(bot, message, name, args)
+            } else {
+                val name = args.getOrNull(0) ?: ""
+
+                val command = commands[name] ?: return
+
+                command.execute(bot, message, name, args)
+            }
         }
     }
 

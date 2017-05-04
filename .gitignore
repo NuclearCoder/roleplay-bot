@@ -123,3 +123,9 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+
+/.gradle/
+/.idea/
+/build/
+/nukebot.log
+/nukebot.cfg

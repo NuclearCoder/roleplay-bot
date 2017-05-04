@@ -1,7 +1,7 @@
 package org.kud.roleplay.util
 
-import org.kud.roleplay.GET_TIMEOUT
 import org.kud.roleplay.LOGGER
+import org.kud.roleplay.URL_GET_TIMEOUT
 import sx.blah.discord.handle.obj.IChannel
 import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.util.DiscordException
@@ -40,8 +40,8 @@ fun IChannel.rSendFileURL(content: String, url: String,
         val conn = URL(url).openConnection()
         conn.doInput = true
         conn.doOutput = true
-        conn.readTimeout = GET_TIMEOUT
-        conn.connectTimeout = GET_TIMEOUT
+        conn.readTimeout = URL_GET_TIMEOUT
+        conn.connectTimeout = URL_GET_TIMEOUT
 
         conn.setRequestProperty("User-Agent",
                 "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11")
