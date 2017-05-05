@@ -1,4 +1,4 @@
-package org.kud.roleplay.command.manage
+package org.kud.roleplay.command.music
 
 import org.kud.roleplay.command.meta.Command
 import org.kud.roleplay.command.meta.CommandContext
@@ -30,7 +30,7 @@ SOFTWARE.
 class MusicEndCommand : Command(PermissionLevel.Moderator) {
 
     override fun onInvoke(context: CommandContext) {
-        getMusicManager(context.event.guild).run {
+        context.bot.audio.getMusicManager(context.event.guild).run {
             context.event.guild.audioManager.closeAudioConnection()
             this.player.destroy()
         }

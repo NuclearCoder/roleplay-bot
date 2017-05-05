@@ -28,11 +28,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 //bot: RoleplayBot, message: IMessage, command: String, args: Array<String>
-class CommandContext(val event: MessageReceivedEvent, val bot: RoleplayBot, val message: Message, val command: String, val args: Array<String>) {
+class CommandContext(val event: MessageReceivedEvent,
+                     val bot: RoleplayBot,
+                     val message: Message,
+                     val command: String,
+                     val args: Array<String>) {
 
-    fun createResponder(): CommandResponder {
+    /*fun createResponder(): CommandResponder {
         return CommandResponder(this)
-    }
+    }*/
 
     fun reply(init: CommandResponder.() -> Unit) {
         val cmdr = CommandResponder(this)
