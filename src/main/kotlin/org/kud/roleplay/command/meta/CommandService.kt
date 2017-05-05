@@ -5,10 +5,9 @@ import net.dv8tion.jda.core.events.Event
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import net.dv8tion.jda.core.hooks.EventListener
 import org.kud.roleplay.RoleplayBot
-import org.kud.roleplay.util.hasRoleForGuild
 import org.kud.roleplay.util.hasSufficientPermissions
 
-class CommandService(private val bot: RoleplayBot) : EventListener {
+class CommandService(private val bot: RoleplayBot, commandBuilder: RegistryBuilderBlock) : EventListener {
 
     companion object {
         const val cmdPref = "-"
@@ -19,26 +18,12 @@ class CommandService(private val bot: RoleplayBot) : EventListener {
 
     lateinit var owner: User
 
-    private val registry = sortedMapOf<String, RegisteredCommand>()
+    private val registry = CommandRegistry(commandBuilder)
 
     fun initAfterAttach() {
         bot.client.asBot().applicationInfo.queue {
             owner = it.owner
         }
-    }
-
-    fun search(name: String): RegisteredCommand? {
-        // prefix lookup in sorted map
-        val tail = registry.tailMap(name)
-        return if (!tail.isEmpty()) {
-            tail.firstKey().let {
-                if (it.startsWith(name)) tail[it] else null
-            }
-        } else null
-    }
-
-    fun register(name: String, command: Command) {
-        registry.put(name, RegisteredCommand(name, command))
     }
 
     override fun onEvent(event: Event) {
@@ -57,7 +42,7 @@ class CommandService(private val bot: RoleplayBot) : EventListener {
             if (args.isNotEmpty()) {
                 val name = args[0]
                 val context = CommandContext(event, bot, message, name, args)
-                val command = search(name)
+                val command = registry.search(name) // TODO: handle subcommands
 
                 if (command == null) {
                     context.reply {
@@ -67,7 +52,7 @@ class CommandService(private val bot: RoleplayBot) : EventListener {
                     return
                 }
 
-                if (command.command::class.annotations.any { it is NoRoleplayRole } || author.hasRoleForGuild(bot.database.getRoleplayRoleForGuild(guild.idLong))) {
+                /*if (author.hasRoleForGuild(bot.database.getRoleplayRoleForGuild(guild.idLong))) {*/
                     if (author.hasSufficientPermissions(owner, context, command.command.requiredPermission)) {
                         command.command.onInvoke(context)
                     } else {
@@ -76,12 +61,12 @@ class CommandService(private val bot: RoleplayBot) : EventListener {
                             setMessage("this command requires the `${command.command.requiredPermission.name}` permission.")
                         }
                     }
-                } else {
+                /*} else {
                     context.reply {
                         fail()
                         setMessage("you don't have the roleplay role for this guild.")
                     }
-                }
+                }*/
             }
         }
     }

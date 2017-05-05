@@ -19,8 +19,7 @@ class RoleplayBot(private val config: Config) {
 
     val client: JDA = JDABuilder(AccountType.BOT).setToken(config["token"]).buildBlocking()
 
-
-    val commands = CommandService(this).apply {
+    val commands = CommandService(this) {
         register("test", TestCommand())
         register("dbclear", DBCacheClearCommand())
         register("musicstart", MusicStartCommand("https://www.youtube.com/watch?v=zJvhDfYU_LU"))
