@@ -46,3 +46,21 @@ fun parseTime(string: String): Int {
 
     return (hrs * 60 + min) * 60 + sec
 }
+
+inline fun <T : AutoCloseable?, R> T.use(block: (T) -> R): R {
+    var closed = false
+    try {
+        return block(this)
+    } catch (e: Exception) {
+        closed = true
+        try {
+            this?.close()
+        } catch (closeException: Exception) {
+        }
+        throw e
+    } finally {
+        if (!closed) {
+            this?.close()
+        }
+    }
+}

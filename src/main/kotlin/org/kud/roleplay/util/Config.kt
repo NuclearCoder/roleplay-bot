@@ -15,8 +15,6 @@ class Config {
     private val file = File(CONFIG_FILENAME)
     private val properties = Properties()
 
-    private val config = mutableMapOf<String, String>()
-
     private val hasChanged = AtomicBoolean(false)
 
     init {
@@ -48,6 +46,7 @@ class Config {
     fun load() {
         try {
             FileReader(file).use { properties.load(it) }
+            LOGGER.info("Loaded config.")
         } catch (e: IOException) {
             LOGGER.error("Could not load config.", e)
         }
@@ -56,22 +55,24 @@ class Config {
     fun save() {
         try {
             FileWriter(file).use { properties.store(it, "please do not edit this manually") }
+            LOGGER.info("Saved config.")
         } catch (e: IOException) {
             LOGGER.error("Could not load config.", e)
         }
     }
 
     operator fun get(key: String): String {
-        val value = config[key]
+        val value = properties.getProperty(key)
         if (value != null) return value
         else {
-            config[key] = ""
+            LOGGER.warn("Key '$key' did not exist, creating empty entry.")
+            properties[key] = ""
             return ""
         }
     }
 
     operator fun set(key: String, value: Any?) {
-        config[key] = value.toString()
+        properties[key] = value.toString()
         // we've changed config, update the changed flag
         hasChanged.set(true)
     }

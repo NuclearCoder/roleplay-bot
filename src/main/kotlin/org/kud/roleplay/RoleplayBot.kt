@@ -41,7 +41,10 @@ class RoleplayBot(private val config: Config) : IListener<ReadyEvent> {
         LOGGER.info("Disconnecting bot...")
         try {
             client.logout()
+
+            database.disconnect()
             config.save()
+
             keeper.alive.set(false)
         } catch (e: DiscordException) {
             LOGGER.error("Could not log out.", e)

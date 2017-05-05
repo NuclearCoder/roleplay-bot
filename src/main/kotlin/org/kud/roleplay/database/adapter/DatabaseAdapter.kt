@@ -10,7 +10,7 @@ import java.util.*
 
 abstract class DatabaseAdapter(private val config: Config) {
 
-    private var connection: Connection? = null
+    protected var connection: Connection? = null
 
     init {
         try {
@@ -22,6 +22,8 @@ abstract class DatabaseAdapter(private val config: Config) {
         } catch (e: ClassNotFoundException) {
             LOGGER.error("Could not load database driver.", e)
         }
+
+        connect()
     }
 
     fun connect() {
@@ -37,13 +39,17 @@ abstract class DatabaseAdapter(private val config: Config) {
 
         try {
             connection = DriverManager.getConnection("jdbc:mysql://$host:$port/$schema", connectionProps)
+            LOGGER.info("Connected to database.")
         } catch (e: SQLException) {
             LOGGER.error("Could not open database connection.", e)
         }
     }
 
     fun disconnect() {
-        connection?.close()
+        if (connection != null) {
+            connection?.close()
+            LOGGER.info("Disconnected from database.")
+        }
     }
 
 }

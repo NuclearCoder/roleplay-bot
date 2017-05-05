@@ -3,7 +3,9 @@ package org.kud.roleplay.util
 import org.kud.roleplay.LOGGER
 import org.kud.roleplay.URL_GET_TIMEOUT
 import sx.blah.discord.handle.obj.IChannel
+import sx.blah.discord.handle.obj.IGuild
 import sx.blah.discord.handle.obj.IMessage
+import sx.blah.discord.handle.obj.IUser
 import sx.blah.discord.util.DiscordException
 import sx.blah.discord.util.MissingPermissionsException
 import sx.blah.discord.util.RequestBuffer
@@ -62,3 +64,6 @@ fun IChannel.rSendFileURL(content: String, url: String,
     }
 
 }
+
+fun IUser.hasRoleForGuild(guild: IGuild, roleID: Long) =
+        getRolesForGuild(guild).any { it.longID == roleID }
