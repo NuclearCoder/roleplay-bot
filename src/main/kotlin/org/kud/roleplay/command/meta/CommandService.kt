@@ -19,7 +19,7 @@ class CommandService(private val bot: RoleplayBot) : EventListener {
 
     lateinit var owner: User
 
-    private val registry = mutableListOf<RegisteredCommand>()
+    private val registry = sortedMapOf<String, RegisteredCommand>()
 
     fun initAfterAttach() {
         bot.client.asBot().applicationInfo.queue {
@@ -28,11 +28,17 @@ class CommandService(private val bot: RoleplayBot) : EventListener {
     }
 
     fun search(name: String): RegisteredCommand? {
-        return registry.find { name.startsWith(it.name) }
+        // prefix lookup in sorted map
+        val tail = registry.tailMap(name)
+        return if (!tail.isEmpty()) {
+            tail.firstKey().let {
+                if (it.startsWith(name)) tail[it] else null
+            }
+        } else null
     }
 
     fun register(name: String, command: Command) {
-        registry.add(RegisteredCommand(name, command))
+        registry.put(name, RegisteredCommand(name, command))
     }
 
     override fun onEvent(event: Event) {
