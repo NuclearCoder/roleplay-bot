@@ -14,11 +14,9 @@ class RoleplayBot(private val config: Config) {
 
     var commands = CommandService(this)
 
-    //val client: IDiscordClient = ClientBuilder().withToken(config["token"]).setMaxReconnectAttempts(Int.MAX_VALUE).build()
     val client: JDA = JDABuilder(AccountType.BOT).setToken(config["token"]).buildBlocking()
 
     init {
-        commands = CommandService(this)
         // Register commands here
         commands.register("test", TestCommand())
         client.addEventListener(commands)
@@ -27,13 +25,11 @@ class RoleplayBot(private val config: Config) {
     val database = Database(config)
 
     fun terminate() {
-        LOGGER.info("Disconnecting bot...")
+        LOGGER.info("Shutting down...")
         client.shutdown()
-
-            database.disconnect()
-            config.save()
-
-            keeper.alive.set(false)
+        database.disconnect()
+        config.save()
+        keeper.alive.set(false)
     }
 
 }

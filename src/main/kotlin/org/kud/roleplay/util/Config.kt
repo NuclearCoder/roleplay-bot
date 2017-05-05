@@ -1,7 +1,6 @@
 package org.kud.roleplay.util
 
 import org.kud.roleplay.CONFIG_AUTOSAVE_PERIOD
-import org.kud.roleplay.CONFIG_FILENAME
 import org.kud.roleplay.LOGGER
 import java.io.File
 import java.io.FileReader
@@ -10,9 +9,9 @@ import java.io.IOException
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 
-class Config {
+class Config(FILENAME: String) {
 
-    private val file = File(CONFIG_FILENAME)
+    private val file = File(FILENAME)
     private val properties = Properties()
 
     private val hasChanged = AtomicBoolean(false)
