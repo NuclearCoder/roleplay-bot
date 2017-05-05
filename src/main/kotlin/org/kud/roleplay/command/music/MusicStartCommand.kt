@@ -4,7 +4,6 @@ import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.exceptions.PermissionException
 import org.kud.roleplay.command.meta.Command
 import org.kud.roleplay.command.meta.CommandContext
-import org.kud.roleplay.command.meta.NoRoleplayRole
 
 
 /**
@@ -31,7 +30,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 
-@NoRoleplayRole
 class MusicStartCommand(private val audioUrl: String) : Command() {
 
     override fun onInvoke(context: CommandContext) {

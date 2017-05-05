@@ -1,4 +1,4 @@
-package org.kud.roleplay.command.music
+package org.kud.roleplay.music
 
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
@@ -9,7 +9,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import net.dv8tion.jda.core.entities.Guild
 import org.kud.roleplay.command.meta.CommandContext
-import org.kud.roleplay.music.GuildMusicManager
 import java.util.concurrent.ConcurrentHashMap
 
 class BotAudioState {
