@@ -1,11 +1,12 @@
 package org.kud.roleplay.command.manage
 
-/*class DBCacheClearCommand : Command() {
+import org.kud.roleplay.command.meta.CommandContext
+import org.kud.roleplay.command.meta.OwnerRestrictedCommand
+
+class DBCacheClearCommand : OwnerRestrictedCommand() {
     override fun onInvoke(context: CommandContext) {
-        if (context.message.author == context.message.client.applicationOwner) {
             context.bot.database.clearCache()
-            context.message.rReply("database cache has been cleared.")
-        }
+        context.createResponder().success().setMessage("database cache has been cleared.")
     }
 
-}*/
+}
