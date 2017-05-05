@@ -23,11 +23,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-class RegisteredCommand(var name: String, var command: Command) {
-    val subcommands: ArrayList<RegisteredCommand> = ArrayList()
-    fun registerSubcommand(name: String, command: Command): RegisteredCommand {
-        val subcmd: RegisteredCommand = RegisteredCommand(name, command)
-        this.subcommands.add(subcmd)
-        return subcmd
-    }
+
+sealed class RegisteredCommand(val name: String, val command: Command, val hasSubCommands: Boolean) {
+
+    internal class Final(name: String, command: Command)
+        : RegisteredCommand(name, command, false)
+
+    internal class Branch(name: String, command: Command, val registry: CommandRegistry)
+        : RegisteredCommand(name, command, true)
+
 }

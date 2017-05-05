@@ -127,6 +127,9 @@ fabric.properties
 /.gradle/
 /.idea/
 /build/
+/gradle/
+/gradlew
+/gradlew.bat
 /nukebot.log
 /nukebot.cfg
 /classes/

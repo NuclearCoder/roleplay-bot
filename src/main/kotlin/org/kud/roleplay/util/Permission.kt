@@ -31,13 +31,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 fun Member.getPermissionLevel(owner: User, context: CommandContext): PermissionLevel {
-    if (this.user.id == owner.id) return PermissionLevel.BotOwner
+    return when {
+        user.id == owner.id -> PermissionLevel.BotOwner
+        isOwner -> PermissionLevel.ServerOwner
+        hasPermission(Permission.KICK_MEMBERS) || hasPermission(Permission.BAN_MEMBERS) -> PermissionLevel.Moderator
+        context.event.channelType == ChannelType.PRIVATE -> PermissionLevel.Private
+        else -> PermissionLevel.User
+    }
+    /*if () return PermissionLevel.BotOwner
     if (this.isOwner) return PermissionLevel.ServerOwner
     if (this.hasPermission(Permission.KICK_MEMBERS) || this.hasPermission(Permission.BAN_MEMBERS)) return PermissionLevel.Moderator
     if (context.event.channelType == ChannelType.PRIVATE) return PermissionLevel.Private
-    return PermissionLevel.User
+    return PermissionLevel.User*/
 }
 
-fun userHasSufficientPermissions(member: Member, owner: User, context: CommandContext, desired: PermissionLevel): Boolean {
-    return member.getPermissionLevel(owner, context).ordinal >= desired.ordinal
+fun Member.hasSufficientPermissions(owner: User, context: CommandContext, desired: PermissionLevel): Boolean {
+    return getPermissionLevel(owner, context).ordinal >= desired.ordinal
 }

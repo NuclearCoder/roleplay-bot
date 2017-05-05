@@ -13,14 +13,14 @@ class CharaCommand : Command() {
         // args: chara, cmd[, args...]
         if (context.args.size >= 2) {
             val cmd = context.args[1].toLowerCase()
-            when (cmd) {
+            when (cmd) { // FIXME sub-commands be handled by the command service
                 "create" -> create(context)
                 "delete" -> delete(context)
                 "update" -> update(context)
                 "list" -> list(context)
                 "info" -> info(context)
                 else -> {
-                    context.createResponder().fail().setMessage("you haven't specified a valid sub-command.\n```\ncreate | delete | update```").queue()
+                    context.replyFail("you haven't specified a valid sub-command.\n```\ncreate | delete | update```")
                 }
             }
         }
@@ -38,16 +38,19 @@ class CharaCommand : Command() {
             if (!context.bot.database.existsRoleplayCharacter(guildId, userId, name)) {
                 try {
                     context.bot.database.createRoleplayCharacter(guildId, userId, name)
-                    context.createResponder().setMessage("your character \"$name\" has been created!").queue()
+                    context.replySuccess("your character \"$name\" has been created!")
                 } catch (e: SQLException) {
-                    context.createResponder().fail().setMessage("an error occurred while creating your character.").queue()
                     LOGGER.error("Could not create character.", e)
+                    context.replyFail("an error occurred while creating your character.")
                 }
             } else {
-                context.createResponder().fail().setMessage("you already have a character with that name.").queue()
+                context.reply {
+                    fail()
+                    setMessage("you already have a character with that name.")
+                }
             }
         } else {
-            context.createResponder().fail().setMessage("you haven't specified a character name.").queue()
+            context.replyFail("you haven't specified a character name.")
         }
     }
 
@@ -61,16 +64,16 @@ class CharaCommand : Command() {
             if (context.bot.database.existsRoleplayCharacter(guildId, userId, name)) {
                 try {
                     context.bot.database.deleteRoleplayCharacter(guildId, userId, name)
-                    context.createResponder().setMessage("your character \"$name\" has been deleted!").queue()
+                    context.replySuccess("your character \"$name\" has been deleted!")
                 } catch (e: SQLException) {
-                    context.createResponder().fail().setMessage("an error occurred while deleting your character.").queue()
                     LOGGER.error("Could not delete character.", e)
+                    context.replyFail("an error occurred while deleting your character.")
                 }
             } else {
-                context.createResponder().fail().setMessage("you have no character with that name.").queue()
+                context.replyFail("you have no character with that name.")
             }
         } else {
-            context.createResponder().fail().setMessage("you haven't specified a character name.").queue()
+            context.replyFail("you haven't specified a character name.")
         }
     }
 
@@ -90,19 +93,19 @@ class CharaCommand : Command() {
                     val content = rest[1].trim()
                     try {
                         context.bot.database.updateRoleplayCharacter(guildId, userId, name, content)
-                        context.createResponder().setMessage("your character \"$name\" has been updated!").queue()
+                        context.replySuccess("your character \"$name\" has been updated!")
                     } catch (e: SQLException) {
-                        context.createResponder().fail().setMessage("an error occurred while updating your character.").fail().queue()
                         LOGGER.error("Could not update character.", e)
+                        context.replyFail("an error occurred while updating your character.")
                     }
                 } else {
-                    context.createResponder().fail().setMessage("you haven't specified a character description/bio. \nEnter your bio after the first line break. (Shift+ENTER to begin a new line)").queue()
+                    context.replyFail("you haven't specified a character description/bio.\nEnter your bio after the first line break. (Shift+ENTER to begin a new line)")
                 }
             } else {
-                context.createResponder().setMessage("you have no character with that name.").fail().queue()
+                context.replyFail("you have no character with that name.")
             }
         } else {
-            context.createResponder().setMessage("you haven't specified a character name.").fail().queue()
+            context.replyFail("you haven't specified a character name.")
         }
     }
 
@@ -114,9 +117,9 @@ class CharaCommand : Command() {
 
         if (characters.isNotEmpty()) {
             val list = characters.map { it.name }.joinToString(prefix = "```\n", separator = "\n", postfix = "```")
-            context.createResponder().setMessage("here are the characters created by this user.\n$list").queue()
+            context.replySuccess("here are the characters created by this user.\n$list")
         } else {
-            context.createResponder().setMessage("this user has no character.").fail().queue()
+            context.replyFail("this user has no character.")
         }
     }
 
@@ -137,17 +140,16 @@ class CharaCommand : Command() {
                     // we checked previously so a null value here would be an error,
                     // do explicitly throw a NPE.
                     val character = context.bot.database.getRoleplayCharacter(guildId, userId, name)!!
-
-                    context.createResponder().setMessage("here is character info for \"${character.name}\", created by **${guild.getMember(user).effectiveName}** :\n${character.content}").queue()
+                    context.replySuccess("here is character info for \"${character.name}\", created by **${guild.getMember(user).effectiveName}** :\n${character.content}")
                 } catch (e: SQLException) {
-                    context.createResponder().setMessage("an error occurred while fetching character info.").fail().queue()
                     LOGGER.error("Could not fetch character info.", e)
+                    context.replyFail("an error occurred while fetching character info.")
                 }
             } else {
-                context.createResponder().setMessage("there was no character with that name.").fail().queue()
+                context.replyFail("there was no character with that name.")
             }
         } else {
-            context.createResponder().setMessage("you haven't specified a character name and/or character owner.").fail().queue()
+            context.replyFail("you haven't specified a character name and/or character owner.")
         }
     }
 

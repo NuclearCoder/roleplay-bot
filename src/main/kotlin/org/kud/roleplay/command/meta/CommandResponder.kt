@@ -5,6 +5,7 @@ import net.dv8tion.jda.core.MessageBuilder
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.entities.MessageEmbed
 import java.io.InputStream
+import java.util.*
 
 /**
  * Created by Chocolate on 18/04/17.
@@ -34,95 +35,97 @@ import java.io.InputStream
  * SOFTWARE.
  */
 class CommandResponder internal constructor(private val context: CommandContext) {
-    private var content: String? = null
+
+    private var content = Optional.empty<String>()
     private var emote = ":white_check_mark:"
-    private var embed: MessageEmbed? = null
+
+    private var embed = Optional.empty<MessageEmbed>()
+
     private var embedMessage: EmbedBuilder? = null
-    private var embedMessageMessage: String? = null
+    private var embedMessageMessage = Optional.empty<String>()
+
     private var stream: InputStream? = null
-    private var filename: String? = null
+    private var filename = Optional.empty<String>()
 
-    fun setEmbed(embed: MessageEmbed): CommandResponder {
-        this.embed = embed
-        return this
+    fun setEmbed(embed: MessageEmbed) {
+        this.embed = Optional.of(embed)
     }
 
-    fun setEmbed(embed: EmbedBuilder): CommandResponder {
-        this.embed = embed.build()
-        return this
+    fun setEmbed(embed: EmbedBuilder) {
+        this.embed = Optional.of(embed.build())
     }
 
-    fun success(): CommandResponder {
+    fun success() {
         this.emote = ":white_check_mark:"
-        return this
     }
 
-    fun fail(): CommandResponder {
+    fun fail() {
         this.emote = ":negative_squared_cross_mark:"
-        return this
     }
 
-    fun setEmote(emote: String): CommandResponder {
+    fun setEmote(emote: String) {
         this.emote = emote
-        return this
     }
 
-    fun setMessage(message: String): CommandResponder {
-        this.content = message
-        return this
+    fun setMessage(message: String) {
+        this.content = Optional.of(message)
     }
 
-    fun setEmbedMessage(embed: EmbedBuilder, message: String): CommandResponder {
+    fun setEmbedMessage(embed: EmbedBuilder, message: String) {
         this.embedMessage = embed
-        this.embedMessageMessage = message
-        return this
+        this.embedMessageMessage = Optional.of(message)
     }
 
-    fun attachFile(stream: InputStream, filename: String): CommandResponder {
+    fun attachFile(stream: InputStream, filename: String) {
         this.stream = stream
-        this.filename = filename
-        return this
+        this.filename = Optional.of(filename)
     }
 
-    fun missingArguments(details: String): CommandResponder {
-        return this.fail().setMessage("missing arguments: " + details)
+    fun missingArguments(details: String) {
+        this.fail()
+        this.setMessage("missing arguments: " + details)
     }
 
     // TO-DO: Use message builders
 
     private fun queueInternal(message: Message) {
-        if (this.stream != null && this.filename != null) {
-            context.event.channel.sendFile(stream!!, filename!!, message).queue()
+        filename.ifPresent {
+            context.event.channel.sendFile(stream, it, message).queue()
         }
     }
 
     fun queue() {
         val rootBuilder = MessageBuilder()
-        if (content != null) {
-            rootBuilder.append(emote).append(" | **").append(context.event.member.effectiveName).append("**, ").append(content)
+
+        content.ifPresent {
+            rootBuilder.append(emote).append(" | **").append(context.event.member.effectiveName).append("**, ").append(it)
         }
-        if (embed != null) {
-            context.event.channel.sendMessage(embed!!).queue()
-            rootBuilder.setEmbed(embed)
+
+        embed.ifPresent {
+            context.event.channel.sendMessage(it).queue()
+            rootBuilder.setEmbed(it)
         }
-        if (embedMessage != null && embedMessageMessage != null) {
-            context.event.channel.sendMessage(embedMessage!!.setDescription(emote + " | **" + context.event.member.effectiveName + "**, " + embedMessageMessage).build()).queue()
+
+        embedMessageMessage.ifPresent {
+            context.event.channel.sendMessage(embedMessage!!.setDescription(emote + " | **" + context.event.member.effectiveName + "**, " + it).build()).queue()
         }
-        if (this.stream != null && this.filename != null)
+
+        if (filename.isPresent) {
             queueInternal(rootBuilder.build())
-        else
+        } else {
             context.event.channel.sendMessage(rootBuilder.build()).queue()
+        }
     }
 
     fun queueRaw() {
-        if (content != null) {
-            context.event.channel.sendMessage(content!!).queue({ this.queueInternal(it) })
+        content.ifPresent {
+            context.event.channel.sendMessage(it).queue(this::queueInternal)
         }
-        if (embed != null) {
-            context.event.channel.sendMessage(embed!!).queue()
+        embed.ifPresent {
+            context.event.channel.sendMessage(it).queue()
         }
-        if (embedMessage != null && embedMessageMessage != null) {
-            context.event.channel.sendMessage(embedMessage!!.setDescription(embedMessageMessage).build()).queue()
+        embedMessageMessage.ifPresent {
+            context.event.channel.sendMessage(embedMessage!!.setDescription(it).build()).queue()
         }
     }
 }
