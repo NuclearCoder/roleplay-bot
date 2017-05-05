@@ -138,7 +138,7 @@ class CharaCommand : Command() {
                     // do explicitly throw a NPE.
                     val character = context.bot.database.getRoleplayCharacter(guildId, userId, name)!!
 
-                    context.createResponder().setMessage("here is character info for \"${character.name}\", created by **${guild.getMember(user).effectiveName}** :\n${character.content}")
+                    context.createResponder().setMessage("here is character info for \"${character.name}\", created by **${guild.getMember(user).effectiveName}** :\n${character.content}").queue()
                 } catch (e: SQLException) {
                     context.createResponder().setMessage("an error occurred while fetching character info.").fail().queue()
                     LOGGER.error("Could not fetch character info.", e)

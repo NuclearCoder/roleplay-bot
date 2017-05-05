@@ -7,6 +7,7 @@ import org.kud.roleplay.command.manage.DBCacheClearCommand
 import org.kud.roleplay.command.manage.MusicEndCommand
 import org.kud.roleplay.command.manage.MusicStartCommand
 import org.kud.roleplay.command.meta.CommandService
+import org.kud.roleplay.command.roleplay.CharaCommand
 import org.kud.roleplay.command.test.TestCommand
 import org.kud.roleplay.database.Database
 import org.kud.roleplay.util.Config
@@ -25,6 +26,7 @@ class RoleplayBot(private val config: Config) {
         commands.register("dbclear", DBCacheClearCommand())
         commands.register("musicstart", MusicStartCommand("https://www.youtube.com/watch?v=zJvhDfYU_LU"))
         commands.register("musicend", MusicEndCommand())
+        commands.register("char", CharaCommand())
         client.addEventListener(commands)
         commands.initAfterAttach()
     }

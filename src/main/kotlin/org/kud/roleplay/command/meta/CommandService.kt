@@ -23,7 +23,7 @@ class CommandService(private val bot: RoleplayBot) : ListenerAdapter() {
     }
 
     fun search(name: String): RegisteredCommand? {
-        return registry.find { command -> command.name == name }
+        return registry.find { command -> name.startsWith(command.name) }
     }
 
     fun register(name: String, command: Command) {
