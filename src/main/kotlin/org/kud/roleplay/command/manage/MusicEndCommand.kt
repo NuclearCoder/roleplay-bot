@@ -34,5 +34,6 @@ class MusicEndCommand : Command() {
         val mm: GuildMusicManager = getMusicManager(context.event.guild)
         context.event.guild.audioManager.closeAudioConnection()
         mm.player.destroy()
+        context.createResponder().success().setMessage("roleplay music stopped.").queue()
     }
 }

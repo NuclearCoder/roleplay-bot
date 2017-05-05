@@ -33,4 +33,10 @@ class CommandContext(var event: MessageReceivedEvent, var bot: RoleplayBot, var 
     fun createResponder(): CommandResponder {
         return CommandResponder(this)
     }
+
+    fun responder(init: CommandResponder.() -> Unit): CommandResponder {
+        val cmdr = CommandResponder(this)
+        cmdr.init()
+        return cmdr
+    }
 }
