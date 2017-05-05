@@ -3,7 +3,6 @@ package org.kud.roleplay.command.manage
 import org.kud.roleplay.command.meta.Command
 import org.kud.roleplay.command.meta.CommandContext
 import org.kud.roleplay.command.meta.PermissionLevel
-import org.kud.roleplay.music.GuildMusicManager
 
 /**
 Created by Chocolate on 5/05/17.
@@ -28,12 +27,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-class MusicEndCommand : Command() {
-    override var requiredPermission: PermissionLevel = PermissionLevel.Moderator
+class MusicEndCommand : Command(PermissionLevel.Moderator) {
+
     override fun onInvoke(context: CommandContext) {
-        val mm: GuildMusicManager = getMusicManager(context.event.guild)
-        context.event.guild.audioManager.closeAudioConnection()
-        mm.player.destroy()
-        context.createResponder().success().setMessage("roleplay music stopped.").queue()
+        getMusicManager(context.event.guild).run {
+            context.event.guild.audioManager.closeAudioConnection()
+            this.player.destroy()
+        }
+        context.reply {
+            success()
+            setMessage("roleplay music stopped.")
+        }
     }
 }

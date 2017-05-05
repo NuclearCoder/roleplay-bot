@@ -9,12 +9,12 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Guild
-import net.dv8tion.jda.core.entities.VoiceChannel
 import net.dv8tion.jda.core.exceptions.PermissionException
 import org.kud.roleplay.command.meta.Command
 import org.kud.roleplay.command.meta.CommandContext
 import org.kud.roleplay.command.meta.NoRoleplayRole
 import org.kud.roleplay.music.GuildMusicManager
+import java.util.concurrent.ConcurrentHashMap
 
 
 /**
@@ -41,9 +41,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 
+//FIXME yuck, global state
+
 val playerManager: AudioPlayerManager = DefaultAudioPlayerManager()
-//private final Map<String, GuildMusicManager> musicManagers;
-private val musicManagers: HashMap<String, GuildMusicManager> = HashMap()
+private val musicManagers = ConcurrentHashMap<String, GuildMusicManager>()
 
 @NoRoleplayRole
 class MusicStartCommand(private val audioUrl: String) : Command() {
@@ -52,45 +53,49 @@ class MusicStartCommand(private val audioUrl: String) : Command() {
     }
 
     override fun onInvoke(context: CommandContext) {
-        val mng: GuildMusicManager = getMusicManager(context.event.guild)
-        mng.scheduler.isRepeating = true
-        context.event.guild.audioManager.sendingHandler = mng.sendHandler
+        getMusicManager(context.event.guild).run {
+            this.scheduler.isRepeating = true
+            context.event.guild.audioManager.sendingHandler = this.sendHandler
+        }
 
         if (!context.event.member.voiceState.inVoiceChannel()) {
-            context.createResponder().fail().setMessage("you're not in a voice channel!").queue()
+            context.reply {
+                fail()
+                setMessage("you're not in a voice channel!")
+            }
             return
         }
-        val vc: VoiceChannel = context.event.member.voiceState.channel
 
         try {
-            context.event.guild.audioManager.openAudioConnection(vc)
+            val voiceChannel = context.event.member.voiceState.channel
+            context.event.guild.audioManager.openAudioConnection(voiceChannel)
         } catch (e: PermissionException) {
             if (e.permission == Permission.VOICE_CONNECT) {
-                context.createResponder().fail().setMessage("I don't have permission to connect to your voice channel.").queue()
-                return
+                context.reply {
+                    fail()
+                    setMessage("I don't have permission to connect to your voice channel.")
+                }
             }
         }
         loadAndPlay(getMusicManager(context.event.guild), context, audioUrl)
     }
 }
 
-private fun loadAndPlay(mng: GuildMusicManager, context: CommandContext, trackUrl: String) {
-    playerManager.loadItemOrdered(mng, trackUrl, object : AudioLoadResultHandler {
+private fun loadAndPlay(manager: GuildMusicManager, context: CommandContext, trackUrl: String) {
+    playerManager.loadItemOrdered(manager, trackUrl, object : AudioLoadResultHandler {
 
         override fun trackLoaded(track: AudioTrack) {
-            mng.scheduler.queue(track)
-            context.createResponder().success().setMessage("roleplay music started!").queue()
+            manager.scheduler.queue(track)
+            context.reply {
+                success()
+                setMessage("roleplay music started!")
+            }
         }
 
         override fun playlistLoaded(playlist: AudioPlaylist) {
             // DO NOT USE PLAYLISTS PLEASE
-            var firstTrack: AudioTrack? = playlist.selectedTrack
             val tracks = playlist.tracks
-
-
-            if (firstTrack == null) {
-                firstTrack = playlist.tracks[0]
-            }
+            var firstTrack = playlist.selectedTrack ?: tracks[0]
         }
 
         override fun noMatches() {
@@ -98,24 +103,17 @@ private fun loadAndPlay(mng: GuildMusicManager, context: CommandContext, trackUr
         }
 
         override fun loadFailed(exception: FriendlyException) {
-            context.createResponder().fail().setMessage("an error occurred loading the roleplay music!").queue()
+            context.reply {
+                fail()
+                setMessage("an error occurred loading the roleplay music!")
+            }
         }
     })
 }
 
 fun getMusicManager(guild: Guild): GuildMusicManager {
     val guildId = guild.id
-    var mng: GuildMusicManager? = musicManagers[guildId]
-    if (mng == null) {
-        synchronized(musicManagers) {
-            mng = musicManagers[guildId]
-            if (mng == null) {
-                val newmng = GuildMusicManager(playerManager)
-                newmng.player.volume = 100
-                musicManagers.put(guildId, newmng)
-                return newmng
-            }
-        }
+    return musicManagers.computeIfAbsent(guildId) {
+        GuildMusicManager(playerManager).apply { player.volume = 100 }
     }
-    return mng!!
 }

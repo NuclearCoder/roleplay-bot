@@ -38,6 +38,6 @@ fun Member.getPermissionLevel(owner: User, context: CommandContext): PermissionL
     return PermissionLevel.User
 }
 
-fun userHasSufficientPermissions(member: Member, owner: User, context: CommandContext, desired: PermissionLevel): Boolean {
-    return member.getPermissionLevel(owner, context).ordinal >= desired.ordinal
+fun Member.hasSufficientPermissions(owner: User, context: CommandContext, desired: PermissionLevel): Boolean {
+    return getPermissionLevel(owner, context).ordinal >= desired.ordinal
 }

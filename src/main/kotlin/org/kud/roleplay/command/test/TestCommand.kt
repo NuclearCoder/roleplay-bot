@@ -7,6 +7,6 @@ import org.kud.roleplay.command.meta.CommandContext
 class TestCommand : Command() {
     override fun onInvoke(context: CommandContext) {
         LOGGER.info("Test command.")
-        context.createResponder().setMessage("test!").queue()
+        context.replySuccess("test!")
     }
 }

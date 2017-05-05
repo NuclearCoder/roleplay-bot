@@ -1,36 +1,43 @@
 package org.kud.roleplay.command.meta
 
 import net.dv8tion.jda.core.entities.User
+import net.dv8tion.jda.core.events.Event
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
-import net.dv8tion.jda.core.hooks.ListenerAdapter
+import net.dv8tion.jda.core.hooks.EventListener
 import org.kud.roleplay.RoleplayBot
-import org.kud.roleplay.util.userHasSufficientPermissions
+import org.kud.roleplay.util.hasRoleForGuild
+import org.kud.roleplay.util.hasSufficientPermissions
 
-class CommandService(private val bot: RoleplayBot) : ListenerAdapter() {
+class CommandService(private val bot: RoleplayBot) : EventListener {
 
-    var cmdPref = "-"
-    var rootCmd = "rp"
+    companion object {
+        const val cmdPref = "-"
+        const val rootCmd = "rp"
 
-    val prefix = "$cmdPref$rootCmd"
+        const val prefix = "$cmdPref$rootCmd"
+    }
+
     lateinit var owner: User
 
-    private var registry: ArrayList<RegisteredCommand> = ArrayList()
+    private val registry = mutableListOf<RegisteredCommand>()
 
     fun initAfterAttach() {
-        bot.client.asBot().applicationInfo.queue({
+        bot.client.asBot().applicationInfo.queue {
             owner = it.owner
-        })
+        }
     }
 
     fun search(name: String): RegisteredCommand? {
-        return registry.find { command -> name.startsWith(command.name) }
+        return registry.find { name.startsWith(it.name) }
     }
 
     fun register(name: String, command: Command) {
         registry.add(RegisteredCommand(name, command))
     }
 
-    override fun onMessageReceived(event: MessageReceivedEvent) {
+    override fun onEvent(event: Event) {
+        if (event !is MessageReceivedEvent) return
+
         val message = event.message
         val content = message.content
 
@@ -47,19 +54,28 @@ class CommandService(private val bot: RoleplayBot) : ListenerAdapter() {
                 val command = search(name)
 
                 if (command == null) {
-                    context.createResponder().fail().setMessage("you haven't specified a valid roleplay command.").queue()
+                    context.reply {
+                        fail()
+                        setMessage("you haven't specified a valid roleplay command.")
+                    }
                     return
                 }
 
-                //if (command.command::class.annotations.any { it == NoRoleplayRole::class } || author.hasRoleForGuild(bot.database.getRoleplayRoleForGuild(guild.idLong))) {
-                    if (userHasSufficientPermissions(author, owner, context, command.command.requiredPermission)) {
+                if (command.command::class.annotations.any { it is NoRoleplayRole } || author.hasRoleForGuild(bot.database.getRoleplayRoleForGuild(guild.idLong))) {
+                    if (author.hasSufficientPermissions(owner, context, command.command.requiredPermission)) {
                         command.command.onInvoke(context)
                     } else {
-                        context.createResponder().fail().setMessage("this command requires the `${command.command.requiredPermission.name}` permission.").queue()
+                        context.reply {
+                            fail()
+                            setMessage("this command requires the `${command.command.requiredPermission.name}` permission.")
+                        }
                     }
-                /*} else {
-                    context.createResponder().fail().setMessage("you don't have the roleplay role for this guild.").queue()
-                }*/
+                } else {
+                    context.reply {
+                        fail()
+                        setMessage("you don't have the roleplay role for this guild.")
+                    }
+                }
             }
         }
     }

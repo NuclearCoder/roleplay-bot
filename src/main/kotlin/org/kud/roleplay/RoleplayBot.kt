@@ -16,22 +16,22 @@ class RoleplayBot(private val config: Config) {
 
     private val keeper = TimerKeepAlive()
 
-    var commands = CommandService(this)
+    val commands = CommandService(this).apply {
+        register("test", TestCommand())
+        register("dbclear", DBCacheClearCommand())
+        register("musicstart", MusicStartCommand("https://www.youtube.com/watch?v=zJvhDfYU_LU"))
+        register("musicend", MusicEndCommand())
+        register("chara", CharaCommand())
+    }
 
     val client: JDA = JDABuilder(AccountType.BOT).setToken(config["token"]).buildBlocking()
 
+    val database = Database(config)
+
     init {
-        // Register commands here
-        commands.register("test", TestCommand())
-        commands.register("dbclear", DBCacheClearCommand())
-        commands.register("musicstart", MusicStartCommand("https://www.youtube.com/watch?v=zJvhDfYU_LU"))
-        commands.register("musicend", MusicEndCommand())
-        commands.register("char", CharaCommand())
         client.addEventListener(commands)
         commands.initAfterAttach()
     }
-
-    val database = Database(config)
 
     fun terminate() {
         LOGGER.info("Shutting down...")
