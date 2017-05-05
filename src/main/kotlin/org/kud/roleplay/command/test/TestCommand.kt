@@ -1,13 +1,12 @@
 package org.kud.roleplay.command.test
 
-import org.kud.roleplay.RoleplayBot
-import org.kud.roleplay.command.Command
-import sx.blah.discord.handle.obj.IMessage
+import org.kud.roleplay.LOGGER
+import org.kud.roleplay.command.meta.Command
+import org.kud.roleplay.command.meta.CommandContext
 
-class TestCommand : Command {
-
-    override fun execute(bot: RoleplayBot, message: IMessage, command: String, args: Array<String>) {
-        //LOGGER.info("message: ${message.content.split('\n').joinToString(prefix = "[", separator = ", ", postfix = "]")}")
+class TestCommand : Command() {
+    override fun onInvoke(context: CommandContext) {
+        LOGGER.info("Test command.")
+        context.createResponder().setMessage("test!").queue()
     }
-
 }

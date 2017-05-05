@@ -1,42 +1,8 @@
 package org.kud.roleplay.util
 
-import org.kud.roleplay.LOGGER
-import org.kud.roleplay.URL_GET_TIMEOUT
-import sx.blah.discord.handle.obj.IChannel
-import sx.blah.discord.handle.obj.IGuild
-import sx.blah.discord.handle.obj.IMessage
-import sx.blah.discord.handle.obj.IUser
-import sx.blah.discord.util.DiscordException
-import sx.blah.discord.util.MissingPermissionsException
-import sx.blah.discord.util.RequestBuffer
-import java.io.IOException
-import java.net.URL
+import net.dv8tion.jda.core.entities.Member
 
-fun IChannel.rSendMessage(content: String) {
-    RequestBuffer.request {
-        try {
-            sendMessage(content)
-        } catch (e: MissingPermissionsException) {
-            LOGGER.error("Could not send message", e)
-        } catch (e: DiscordException) {
-            LOGGER.error("Could not send message", e)
-        }
-    }
-}
-
-fun IMessage.rReply(content: String) {
-    RequestBuffer.request {
-        try {
-            reply(content)
-        } catch (e: MissingPermissionsException) {
-            LOGGER.error("Could not reply to message", e)
-        } catch (e: DiscordException) {
-            LOGGER.error("Could not reply to message", e)
-        }
-    }
-}
-
-fun IChannel.rSendFileURL(content: String, url: String,
+/*fun IChannel.rSendFileURL(content: String, url: String,
                           filename: String) {
     try {
         val conn = URL(url).openConnection()
@@ -64,6 +30,7 @@ fun IChannel.rSendFileURL(content: String, url: String,
     }
 
 }
-
-fun IUser.hasRoleForGuild(guild: IGuild, roleID: Long) =
-        getRolesForGuild(guild).any { it.longID == roleID }
+*/
+fun Member.hasRoleForGuild(roleID: Long): Boolean {
+    return this.roles.any { it.idLong == roleID }
+}

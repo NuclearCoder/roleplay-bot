@@ -1,15 +1,11 @@
 package org.kud.roleplay.command.manage
 
-import org.kud.roleplay.RoleplayBot
-import org.kud.roleplay.command.Command
-import org.kud.roleplay.util.rSendMessage
-import sx.blah.discord.handle.obj.IMessage
+import org.kud.roleplay.command.meta.Command
+import org.kud.roleplay.command.meta.CommandContext
 
-class ExitCommand : Command {
-
-    override fun execute(bot: RoleplayBot, message: IMessage, command: String, args: Array<String>) {
-        message.channel.rSendMessage(":wave:")
-        bot.terminate()
+class ExitCommand : Command() {
+    override fun onInvoke(context: CommandContext) {
+        context.createResponder().setMessage("shutting down...").setEmote(":wave:").queue()
+        context.bot.terminate()
     }
-
 }
