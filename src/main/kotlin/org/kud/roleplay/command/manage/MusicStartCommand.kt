@@ -13,7 +13,6 @@ import net.dv8tion.jda.core.entities.VoiceChannel
 import net.dv8tion.jda.core.exceptions.PermissionException
 import org.kud.roleplay.command.meta.Command
 import org.kud.roleplay.command.meta.CommandContext
-import org.kud.roleplay.command.meta.NoRoleplayRole
 import org.kud.roleplay.music.GuildMusicManager
 
 
@@ -45,7 +44,6 @@ val playerManager: AudioPlayerManager = DefaultAudioPlayerManager()
 //private final Map<String, GuildMusicManager> musicManagers;
 private val musicManagers: HashMap<String, GuildMusicManager> = HashMap()
 
-@NoRoleplayRole
 class MusicStartCommand(private val audioUrl: String) : Command() {
     init {
         playerManager.registerSourceManager(YoutubeAudioSourceManager())

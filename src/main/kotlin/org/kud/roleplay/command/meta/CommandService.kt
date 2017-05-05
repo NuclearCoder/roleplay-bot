@@ -23,11 +23,16 @@ class CommandService(private val bot: RoleplayBot) : ListenerAdapter() {
     }
 
     fun search(name: String): RegisteredCommand? {
-        return registry.find { command -> name.startsWith(command.name) }
+        registry
+                .filter { name.startsWith(it.name) }
+                .forEach { return it }
+        return null
     }
 
-    fun register(name: String, command: Command) {
-        registry.add(RegisteredCommand(name, command))
+    fun register(name: String, command: Command): RegisteredCommand {
+        val registerCommand: RegisteredCommand = RegisteredCommand(name, command)
+        registry.add(registerCommand)
+        return registerCommand
     }
 
     override fun onMessageReceived(event: MessageReceivedEvent) {
@@ -51,15 +56,11 @@ class CommandService(private val bot: RoleplayBot) : ListenerAdapter() {
                     return
                 }
 
-                //if (command.command::class.annotations.any { it == NoRoleplayRole::class } || author.hasRoleForGuild(bot.database.getRoleplayRoleForGuild(guild.idLong))) {
-                    if (userHasSufficientPermissions(author, owner, context, command.command.requiredPermission)) {
+                if (userHasSufficientPermissions(author, owner, context, command.command.requiredPermission)) {
                         command.command.onInvoke(context)
                     } else {
                         context.createResponder().fail().setMessage("this command requires the `${command.command.requiredPermission.name}` permission.").queue()
                     }
-                /*} else {
-                    context.createResponder().fail().setMessage("you don't have the roleplay role for this guild.").queue()
-                }*/
             }
         }
     }
