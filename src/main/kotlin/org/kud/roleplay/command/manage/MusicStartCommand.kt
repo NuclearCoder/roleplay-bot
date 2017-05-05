@@ -41,15 +41,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 
-//FIXME yuck, global state
-
-val playerManager: AudioPlayerManager = DefaultAudioPlayerManager()
-private val musicManagers = ConcurrentHashMap<String, GuildMusicManager>()
-
 @NoRoleplayRole
 class MusicStartCommand(private val audioUrl: String) : Command() {
-    init {
-        playerManager.registerSourceManager(YoutubeAudioSourceManager())
+
+    private val musicManagers = ConcurrentHashMap<String, GuildMusicManager>()
+
+    private val playerManager: AudioPlayerManager = DefaultAudioPlayerManager().apply {
+        registerSourceManager(YoutubeAudioSourceManager())
     }
 
     override fun onInvoke(context: CommandContext) {
@@ -59,10 +57,7 @@ class MusicStartCommand(private val audioUrl: String) : Command() {
         }
 
         if (!context.event.member.voiceState.inVoiceChannel()) {
-            context.reply {
-                fail()
-                setMessage("you're not in a voice channel!")
-            }
+            context.replyFail("you're not in a voice channel!")
             return
         }
 
@@ -71,49 +66,44 @@ class MusicStartCommand(private val audioUrl: String) : Command() {
             context.event.guild.audioManager.openAudioConnection(voiceChannel)
         } catch (e: PermissionException) {
             if (e.permission == Permission.VOICE_CONNECT) {
-                context.reply {
-                    fail()
-                    setMessage("I don't have permission to connect to your voice channel.")
-                }
+                context.replyFail("I don't have permission to connect to your voice channel.")
             }
         }
         loadAndPlay(getMusicManager(context.event.guild), context, audioUrl)
     }
-}
 
-private fun loadAndPlay(manager: GuildMusicManager, context: CommandContext, trackUrl: String) {
-    playerManager.loadItemOrdered(manager, trackUrl, object : AudioLoadResultHandler {
+    private fun loadAndPlay(manager: GuildMusicManager, context: CommandContext, trackUrl: String) {
+        playerManager.loadItemOrdered(manager, trackUrl, object : AudioLoadResultHandler {
 
-        override fun trackLoaded(track: AudioTrack) {
-            manager.scheduler.queue(track)
-            context.reply {
-                success()
-                setMessage("roleplay music started!")
+            override fun trackLoaded(track: AudioTrack) {
+                manager.scheduler.queue(track)
+                context.reply {
+                    success()
+                    setMessage("roleplay music started!")
+                }
             }
-        }
 
-        override fun playlistLoaded(playlist: AudioPlaylist) {
-            // DO NOT USE PLAYLISTS PLEASE
-            val tracks = playlist.tracks
-            var firstTrack = playlist.selectedTrack ?: tracks[0]
-        }
-
-        override fun noMatches() {
-
-        }
-
-        override fun loadFailed(exception: FriendlyException) {
-            context.reply {
-                fail()
-                setMessage("an error occurred loading the roleplay music!")
+            override fun playlistLoaded(playlist: AudioPlaylist) {
+                // DO NOT USE PLAYLISTS PLEASE
+                val tracks = playlist.tracks
+                var firstTrack = playlist.selectedTrack ?: tracks[0]
             }
-        }
-    })
-}
 
-fun getMusicManager(guild: Guild): GuildMusicManager {
-    val guildId = guild.id
-    return musicManagers.computeIfAbsent(guildId) {
-        GuildMusicManager(playerManager).apply { player.volume = 100 }
+            override fun noMatches() {
+
+            }
+
+            override fun loadFailed(exception: FriendlyException) {
+                context.replyFail("an error occurred loading the roleplay music!")
+            }
+        })
     }
+
+    private fun getMusicManager(guild: Guild): GuildMusicManager {
+        val guildId = guild.id
+        return musicManagers.computeIfAbsent(guildId) {
+            GuildMusicManager(playerManager).apply { player.volume = 100 }
+        }
+    }
+
 }

@@ -50,10 +50,7 @@ class CharaCommand : Command() {
                 }
             }
         } else {
-            context.reply {
-                fail()
-                setMessage("you haven't specified a character name.")
-            }
+            context.replyFail("you haven't specified a character name.")
         }
     }
 
@@ -67,27 +64,16 @@ class CharaCommand : Command() {
             if (context.bot.database.existsRoleplayCharacter(guildId, userId, name)) {
                 try {
                     context.bot.database.deleteRoleplayCharacter(guildId, userId, name)
-                    context.reply {
-                        setMessage("your character \"$name\" has been deleted!")
-                    }
+                    context.replySuccess("your character \"$name\" has been deleted!")
                 } catch (e: SQLException) {
                     LOGGER.error("Could not delete character.", e)
-                    context.reply {
-                        fail()
-                        setMessage("an error occurred while deleting your character.")
-                    }
+                    context.replyFail("an error occurred while deleting your character.")
                 }
             } else {
-                context.reply {
-                    fail()
-                    setMessage("you have no character with that name.")
-                }
+                context.replyFail("you have no character with that name.")
             }
         } else {
-            context.reply {
-                fail()
-                setMessage("you haven't specified a character name.")
-            }
+            context.replyFail("you haven't specified a character name.")
         }
     }
 
@@ -107,33 +93,19 @@ class CharaCommand : Command() {
                     val content = rest[1].trim()
                     try {
                         context.bot.database.updateRoleplayCharacter(guildId, userId, name, content)
-                        context.reply {
-                            setMessage("your character \"$name\" has been updated!")
-                        }
+                        context.replySuccess("your character \"$name\" has been updated!")
                     } catch (e: SQLException) {
                         LOGGER.error("Could not update character.", e)
-                        context.reply {
-                            fail()
-                            setMessage("an error occurred while updating your character.")
-                        }
+                        context.replyFail("an error occurred while updating your character.")
                     }
                 } else {
-                    context.reply {
-                        fail()
-                        setMessage("you haven't specified a character description/bio.\nEnter your bio after the first line break. (Shift+ENTER to begin a new line)")
-                    }
+                    context.replyFail("you haven't specified a character description/bio.\nEnter your bio after the first line break. (Shift+ENTER to begin a new line)")
                 }
             } else {
-                context.reply {
-                    fail()
-                    setMessage("you have no character with that name.")
-                }
+                context.replyFail("you have no character with that name.")
             }
         } else {
-            context.reply {
-                fail()
-                setMessage("you haven't specified a character name.")
-            }
+            context.replyFail("you haven't specified a character name.")
         }
     }
 
@@ -145,14 +117,9 @@ class CharaCommand : Command() {
 
         if (characters.isNotEmpty()) {
             val list = characters.map { it.name }.joinToString(prefix = "```\n", separator = "\n", postfix = "```")
-            context.reply {
-                setMessage("here are the characters created by this user.\n$list")
-            }
+            context.replySuccess("here are the characters created by this user.\n$list")
         } else {
-            context.reply {
-                fail()
-                setMessage("this user has no character.")
-            }
+            context.replyFail("this user has no character.")
         }
     }
 
@@ -173,27 +140,16 @@ class CharaCommand : Command() {
                     // we checked previously so a null value here would be an error,
                     // do explicitly throw a NPE.
                     val character = context.bot.database.getRoleplayCharacter(guildId, userId, name)!!
-                    context.reply {
-                        setMessage("here is character info for \"${character.name}\", created by **${guild.getMember(user).effectiveName}** :\n${character.content}")
-                    }
+                    context.replySuccess("here is character info for \"${character.name}\", created by **${guild.getMember(user).effectiveName}** :\n${character.content}")
                 } catch (e: SQLException) {
                     LOGGER.error("Could not fetch character info.", e)
-                    context.reply {
-                        fail()
-                        setMessage("an error occurred while fetching character info.")
-                    }
+                    context.replyFail("an error occurred while fetching character info.")
                 }
             } else {
-                context.reply {
-                    fail()
-                    setMessage("there was no character with that name.")
-                }
+                context.replyFail("there was no character with that name.")
             }
         } else {
-            context.reply {
-                fail()
-                setMessage("you haven't specified a character name and/or character owner.")
-            }
+            context.replyFail("you haven't specified a character name and/or character owner.")
         }
     }
 
