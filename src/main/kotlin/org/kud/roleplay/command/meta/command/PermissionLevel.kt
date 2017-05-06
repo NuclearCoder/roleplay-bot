@@ -1,4 +1,4 @@
-package org.kud.roleplay.command.meta
+package org.kud.roleplay.command.meta.command
 
 /**
 Created by Chocolate on 5/05/17.
@@ -23,13 +23,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-
-sealed class RegisteredCommand(val name: String, val command: Command, val hasSubCommands: Boolean) {
-
-    internal class Final(name: String, command: Command)
-        : RegisteredCommand(name, command, false)
-
-    internal class Branch(name: String, command: Command, val registry: CommandRegistry)
-        : RegisteredCommand(name, command, true)
-
+enum class PermissionLevel {
+    User,
+    Private,
+    Moderator,
+    ServerOwner,
+    BotOwner
 }

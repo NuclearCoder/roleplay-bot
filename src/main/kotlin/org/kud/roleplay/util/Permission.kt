@@ -5,7 +5,7 @@ import net.dv8tion.jda.core.entities.ChannelType
 import net.dv8tion.jda.core.entities.Member
 import net.dv8tion.jda.core.entities.User
 import org.kud.roleplay.command.meta.CommandContext
-import org.kud.roleplay.command.meta.PermissionLevel
+import org.kud.roleplay.command.meta.command.PermissionLevel
 
 /**
 Created by Chocolate on 5/05/17.

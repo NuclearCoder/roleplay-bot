@@ -3,6 +3,7 @@ package org.kud.roleplay.command.meta
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import org.kud.roleplay.RoleplayBot
+import org.kud.roleplay.util.MessageTokenizer
 
 /**
 Created by Chocolate on 5/05/17.
@@ -32,7 +33,7 @@ class CommandContext(val event: MessageReceivedEvent,
                      val bot: RoleplayBot,
                      val message: Message,
                      val command: String,
-                     val args: Array<String>) {
+                     val tokenizer: MessageTokenizer) {
 
     /*fun createResponder(): CommandResponder {
         return CommandResponder(this)

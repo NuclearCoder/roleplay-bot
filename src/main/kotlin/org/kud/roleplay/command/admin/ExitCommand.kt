@@ -1,10 +1,9 @@
-package org.kud.roleplay.command.manage
+package org.kud.roleplay.command.admin
 
-import org.kud.roleplay.command.meta.Command
 import org.kud.roleplay.command.meta.CommandContext
-import org.kud.roleplay.command.meta.PermissionLevel
+import org.kud.roleplay.command.meta.command.OwnerRestrictedCommand
 
-class ExitCommand : Command(PermissionLevel.BotOwner) {
+class ExitCommand : OwnerRestrictedCommand() {
 
     override fun onInvoke(context: CommandContext) {
         context.reply {

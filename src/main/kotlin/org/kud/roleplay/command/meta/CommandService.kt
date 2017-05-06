@@ -5,15 +5,19 @@ import net.dv8tion.jda.core.events.Event
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import net.dv8tion.jda.core.hooks.EventListener
 import org.kud.roleplay.RoleplayBot
+import org.kud.roleplay.command.meta.command.Command
+import org.kud.roleplay.command.meta.registry.CommandRegistry
+import org.kud.roleplay.command.meta.registry.RegisteredCommand
+import org.kud.roleplay.util.MessageTokenizer
 import org.kud.roleplay.util.hasSufficientPermissions
 
-class CommandService(private val bot: RoleplayBot, commandBuilder: RegistryBuilderBlock) : EventListener {
+class CommandService(private val bot: RoleplayBot, commandBuilder: CommandRegistry.RegistryBuilder.() -> Unit) : EventListener {
 
     companion object {
         const val cmdPref = "-"
         const val rootCmd = "rp"
 
-        const val prefix = "$cmdPref$rootCmd"
+        const val prefix = cmdPref + rootCmd
     }
 
     lateinit var owner: User
@@ -26,48 +30,35 @@ class CommandService(private val bot: RoleplayBot, commandBuilder: RegistryBuild
         }
     }
 
+    private fun processCommand(event: MessageReceivedEvent, tokenizer: MessageTokenizer, name: String, registry: CommandRegistry) {
+        val command = registry.search(name)
+        if (command is RegisteredCommand.Branch) {
+            processCommand(event, tokenizer, tokenizer.nextWord(), command.registry)
+        } else if (command is RegisteredCommand.Final) {
+            command.command.call(CommandContext(event, bot, event.message, name, tokenizer))
+        } else { /* command == null */
+            registry.fallback.call(CommandContext(event, bot, event.message, "", tokenizer))
+        }
+    }
+
+    private fun Command.call(context: CommandContext) {
+        if (context.event.member.hasSufficientPermissions(owner, context, this.requiredPermission)) {
+            this.onInvoke(context)
+        } else {
+            context.replyFail("this command requires the `${this.requiredPermission.name}` permission.")
+        }
+    }
+
     override fun onEvent(event: Event) {
         if (event !is MessageReceivedEvent) return
 
         val message = event.message
         val content = message.content
 
-        val rawArgs = content.split(' ')
-        if (rawArgs.isNotEmpty() && rawArgs[0] == prefix) {
-            val args = rawArgs.drop(1).toTypedArray()
+        val tokenizer = MessageTokenizer(content)
 
-            val guild = message.guild
-            val author = message.member
-
-            if (args.isNotEmpty()) {
-                val name = args[0]
-                val context = CommandContext(event, bot, message, name, args)
-                val command = registry.search(name) // TODO: handle subcommands
-
-                if (command == null) {
-                    context.reply {
-                        fail()
-                        setMessage("you haven't specified a valid roleplay command.")
-                    }
-                    return
-                }
-
-                /*if (author.hasRoleForGuild(bot.database.getRoleplayRoleForGuild(guild.idLong))) {*/
-                    if (author.hasSufficientPermissions(owner, context, command.command.requiredPermission)) {
-                        command.command.onInvoke(context)
-                    } else {
-                        context.reply {
-                            fail()
-                            setMessage("this command requires the `${command.command.requiredPermission.name}` permission.")
-                        }
-                    }
-                /*} else {
-                    context.reply {
-                        fail()
-                        setMessage("you don't have the roleplay role for this guild.")
-                    }
-                }*/
-            }
+        if (tokenizer.skip(prefix)) {
+            processCommand(event, tokenizer, tokenizer.nextWord(), registry)
         }
     }
 
