@@ -15,8 +15,6 @@ import org.kud.roleplay.util.Config
 
 class RoleplayBot(private val config: Config) {
 
-    private val keeper = TimerKeepAlive()
-
     val client: JDA = JDABuilder(AccountType.BOT).setToken(config["token"]).buildBlocking()
 
     val commands = CommandService(this) {
@@ -39,7 +37,6 @@ class RoleplayBot(private val config: Config) {
         client.shutdown()
         database.disconnect()
         config.save()
-        keeper.alive.set(false)
     }
 
 }
