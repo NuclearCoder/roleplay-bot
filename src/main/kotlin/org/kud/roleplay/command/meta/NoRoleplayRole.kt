@@ -1,12 +1,7 @@
-package org.kud.roleplay.command.music
-
-import org.kud.roleplay.command.meta.Command
-import org.kud.roleplay.command.meta.CommandContext
-import org.kud.roleplay.command.meta.NoRoleplayRole
-import org.kud.roleplay.command.meta.PermissionLevel
+package org.kud.roleplay.command.meta
 
 /**
-Created by Chocolate on 5/05/17.
+Created by Chocolate on 6/05/17.
 
 Copyright (c) 2017 Chocolate.
 
@@ -28,17 +23,4 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-@NoRoleplayRole
-class MusicEndCommand : Command(PermissionLevel.Moderator) {
-
-    override fun onInvoke(context: CommandContext) {
-        context.bot.audio.getMusicManager(context.event.guild).run {
-            context.event.guild.audioManager.closeAudioConnection()
-            this.player.destroy()
-        }
-        context.reply {
-            success()
-            setMessage("roleplay music stopped.")
-        }
-    }
-}
+annotation class NoRoleplayRole

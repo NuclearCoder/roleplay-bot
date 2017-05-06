@@ -3,7 +3,7 @@
     <shutdownHook/>
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>nukebot.log</file>
+        <file>roleplaybot.log</file>
 
         <encoder>
             <pattern>[%d{HH:mm:ss}][%level] (%thread\) %logger - %msg%n</pattern>
