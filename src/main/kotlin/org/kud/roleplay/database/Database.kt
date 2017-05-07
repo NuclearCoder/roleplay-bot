@@ -4,7 +4,7 @@ import org.kud.roleplay.database.adapter.DatabaseAdapter
 import org.kud.roleplay.database.adapter.request.CachedRequest
 import org.kud.roleplay.roleplay.Character
 import org.kud.roleplay.roleplay.user.User
-import org.kud.roleplay.roleplay.user.experience.UserExperience
+import org.kud.roleplay.roleplay.user.UserExperience
 import org.kud.roleplay.util.Config
 import org.kud.roleplay.util.use
 import java.sql.Connection

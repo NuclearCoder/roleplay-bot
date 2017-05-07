@@ -4,7 +4,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import org.kud.roleplay.RoleplayBot
 import org.kud.roleplay.roleplay.experience.ExperienceCalculator
 import org.kud.roleplay.roleplay.user.User
-import org.kud.roleplay.roleplay.user.experience.UserExperience
+import org.kud.roleplay.roleplay.user.UserExperience
 
 class MessageHandler {
 

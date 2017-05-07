@@ -1,4 +1,4 @@
-package org.kud.roleplay.roleplay.user.experience
+package org.kud.roleplay.roleplay.user
 
 import org.kud.roleplay.roleplay.experience.getLevelFor
 
