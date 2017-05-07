@@ -26,11 +26,12 @@ class CharaInfoCommand : Command() {
 
                 if (context.bot.database.existsRoleplayCharacter(guildId, userId, name)) {
                     try {
-                        // we checked previously so a null value here would be an error,
-                        // do explicitly throw a NPE.
-                        val character = context.bot.database.getRoleplayCharacter(guildId, userId, name)!!
-
-                        context.replySuccess("here is character info for \"${character.name}\", created by **${guild.getMember(user).effectiveName}** :\n${character.content}")
+                        val character = context.bot.database.getRoleplayCharacter(guildId, userId, name)
+                        if (character != null) {
+                            context.replySuccess("here is character info for \"${character.name}\", created by **${guild.getMember(user).effectiveName}** :\n${character.content}")
+                        } else {
+                            context.replyFail("there was no character with that name.")
+                        }
                     } catch (e: SQLException) {
                         LOGGER.error("Could not fetch character info.", e)
                         context.replyFail("an error occurred while fetching character info.")
