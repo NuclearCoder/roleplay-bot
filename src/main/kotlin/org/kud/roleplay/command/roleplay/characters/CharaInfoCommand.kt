@@ -1,8 +1,12 @@
 package org.kud.roleplay.command.roleplay.characters
 
-class CharaInfoCommand : org.kud.roleplay.command.meta.command.Command() {
+import org.kud.roleplay.command.meta.CommandContext
+import org.kud.roleplay.command.meta.command.Command
+import java.sql.SQLException
 
-    override fun onInvoke(context: org.kud.roleplay.command.meta.CommandContext) {
+class CharaInfoCommand : Command() {
+
+    override fun onInvoke(context: CommandContext) {
         val guild = context.event.guild
         val guildId = guild.idLong
 
@@ -27,7 +31,7 @@ class CharaInfoCommand : org.kud.roleplay.command.meta.command.Command() {
                         } else {
                             context.replyFail("there was no character with that name.")
                         }
-                    } catch (e: java.sql.SQLException) {
+                    } catch (e: SQLException) {
                         org.kud.roleplay.LOGGER.error("Could not fetch character info.", e)
                         context.replyFail("an error occurred while fetching character info.")
                     }

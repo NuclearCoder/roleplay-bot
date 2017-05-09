@@ -1,8 +1,12 @@
 package org.kud.roleplay.command.roleplay.characters
 
-class CharaCreateCommand : org.kud.roleplay.command.meta.command.Command() {
+import org.kud.roleplay.command.meta.CommandContext
+import org.kud.roleplay.command.meta.command.Command
+import java.sql.SQLException
 
-    override fun onInvoke(context: org.kud.roleplay.command.meta.CommandContext) {
+class CharaCreateCommand : Command() {
+
+    override fun onInvoke(context: CommandContext) {
         val guildId = context.message.guild.idLong
         val userId = context.message.author.idLong
 
@@ -15,7 +19,7 @@ class CharaCreateCommand : org.kud.roleplay.command.meta.command.Command() {
                 try {
                     context.bot.database.createRoleplayCharacter(guildId, userId, name)
                     context.replySuccess("your character \"$name\" has been created!")
-                } catch (e: java.sql.SQLException) {
+                } catch (e: SQLException) {
                     org.kud.roleplay.LOGGER.error("Could not create character.", e)
                     context.replyFail("an error occurred while creating your character.")
                 }
