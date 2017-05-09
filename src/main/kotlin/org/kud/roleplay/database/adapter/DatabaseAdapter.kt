@@ -22,8 +22,6 @@ abstract class DatabaseAdapter(private val config: Config) {
         } catch (e: ClassNotFoundException) {
             LOGGER.error("Could not load database driver.", e)
         }
-
-        connect()
     }
 
     fun connect() {

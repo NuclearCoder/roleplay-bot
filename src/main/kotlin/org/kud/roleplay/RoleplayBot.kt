@@ -1,15 +1,24 @@
 package org.kud.roleplay
 
+import club.minnced.kjda.client
+import club.minnced.kjda.plusAssign
+import club.minnced.kjda.token
 import net.dv8tion.jda.core.AccountType
-import net.dv8tion.jda.core.JDA
-import net.dv8tion.jda.core.JDABuilder
+import net.dv8tion.jda.core.events.ReadyEvent
+import net.dv8tion.jda.core.events.ShutdownEvent
 import net.dv8tion.jda.core.hooks.AnnotatedEventManager
+import net.dv8tion.jda.core.hooks.SubscribeEvent
 import org.kud.roleplay.command.admin.DBCacheClearCommand
 import org.kud.roleplay.command.admin.ExitCommand
 import org.kud.roleplay.command.meta.CommandService
 import org.kud.roleplay.command.music.MusicStartCommand
 import org.kud.roleplay.command.music.MusicStopCommand
-import org.kud.roleplay.command.roleplay.*
+import org.kud.roleplay.command.roleplay.characters.CharaCommand
+import org.kud.roleplay.command.roleplay.characters.CharaCreateCommand
+import org.kud.roleplay.command.roleplay.characters.CharaDeleteCommand
+import org.kud.roleplay.command.roleplay.characters.CharaInfoCommand
+import org.kud.roleplay.command.roleplay.characters.CharaListCommand
+import org.kud.roleplay.command.roleplay.characters.CharaUpdateCommand
 import org.kud.roleplay.command.test.TestCommand
 import org.kud.roleplay.database.Database
 import org.kud.roleplay.music.BotAudioState
@@ -17,15 +26,10 @@ import org.kud.roleplay.util.Config
 
 class RoleplayBot(private val config: Config) {
 
-    val client: JDA = JDABuilder(AccountType.BOT)
-            .setToken(config["token"])
-            .setEventManager(AnnotatedEventManager())
-            .buildBlocking()
     val database = Database(config)
-
     val audio = BotAudioState()
 
-    private val commands = CommandService(this) {
+    val commands = CommandService(this@RoleplayBot) {
         register("exit", ExitCommand())
 
         register("test", TestCommand())
@@ -49,16 +53,40 @@ class RoleplayBot(private val config: Config) {
         }
     }
 
-    init {
-        client.addEventListener(commands)
-        commands.initAfterAttach()
+    val client = client(AccountType.BOT) {
+        token { config["token"] }
+
+        setEventManager(AnnotatedEventManager())
+
+        this += object {
+            @SubscribeEvent
+            fun onReady(event: ReadyEvent) {
+                commands.initAfterAttach()
+                database.connect()
+            }
+
+            @SubscribeEvent
+            fun onShutdown(event: ShutdownEvent) {
+                database.disconnect()
+                config.save()
+            }
+        }
+
+        this += commands
     }
 
     fun terminate() {
+        LOGGER.info("Waiting for last requests...")
+
+        try {
+            //wait for requests for an arbitrary time
+            Thread.sleep(SHUTDOWN_WAIT)
+        } catch (ignored: InterruptedException) {
+        }
+
         LOGGER.info("Shutting down...")
+
         client.shutdown()
-        database.disconnect()
-        config.save()
     }
 
 }

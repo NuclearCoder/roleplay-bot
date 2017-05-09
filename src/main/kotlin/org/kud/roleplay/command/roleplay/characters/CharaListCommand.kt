@@ -1,11 +1,8 @@
-package org.kud.roleplay.command.roleplay
+package org.kud.roleplay.command.roleplay.characters
 
-import org.kud.roleplay.command.meta.CommandContext
-import org.kud.roleplay.command.meta.command.Command
+class CharaListCommand : org.kud.roleplay.command.meta.command.Command() {
 
-class CharaListCommand : Command() {
-
-    override fun onInvoke(context: CommandContext) {
+    override fun onInvoke(context: org.kud.roleplay.command.meta.CommandContext) {
         val guildId = context.event.guild.idLong
 
         val userId = if (context.tokenizer.hasMore) {

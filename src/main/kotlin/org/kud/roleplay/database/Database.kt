@@ -76,8 +76,8 @@ class Database(config: Config) : DatabaseAdapter(config) {
             st.setLong(2, userId)
             st.setString(3, name)
             st.executeUpdate()
-            // update cache
             reqRoleplayCharacterExists.clearCache()
+            reqRoleplayCharacterContentList.clearCache()
         }
     }
 
@@ -87,8 +87,8 @@ class Database(config: Config) : DatabaseAdapter(config) {
             st.setLong(2, userId)
             st.setString(3, name)
             st.executeUpdate()
-            // update cache
             reqRoleplayCharacterExists.clearCache()
+            reqRoleplayCharacterContentList.clearCache()
         }
     }
 
@@ -99,6 +99,7 @@ class Database(config: Config) : DatabaseAdapter(config) {
             st.setLong(3, userId)
             st.setString(4, name)
             st.executeUpdate()
+            reqRoleplayCharacterContent.clearCache()
         }
     }
 
@@ -178,6 +179,7 @@ class Database(config: Config) : DatabaseAdapter(config) {
             st.setLong(1, guildId)
             st.setLong(2, userId)
             st.executeUpdate()
+            reqUserExists.clearCache()
         }
     }
 

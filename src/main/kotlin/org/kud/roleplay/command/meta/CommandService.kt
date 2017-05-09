@@ -24,7 +24,6 @@ class CommandService(private val bot: RoleplayBot,
     lateinit var owner: User
 
     private val registry = CommandRegistry(commandBuilder)
-
     private val messageHandler = MessageHandler()
 
     fun initAfterAttach() {

@@ -1,13 +1,8 @@
-package org.kud.roleplay.command.roleplay
+package org.kud.roleplay.command.roleplay.characters
 
-import org.kud.roleplay.LOGGER
-import org.kud.roleplay.command.meta.CommandContext
-import org.kud.roleplay.command.meta.command.Command
-import java.sql.SQLException
+class CharaDeleteCommand : org.kud.roleplay.command.meta.command.Command() {
 
-class CharaDeleteCommand : Command() {
-
-    override fun onInvoke(context: CommandContext) {
+    override fun onInvoke(context: org.kud.roleplay.command.meta.CommandContext) {
         val guildId = context.message.guild.idLong
         val userId = context.message.author.idLong
 
@@ -18,8 +13,8 @@ class CharaDeleteCommand : Command() {
                 try {
                     context.bot.database.deleteRoleplayCharacter(guildId, userId, name)
                     context.replySuccess("your character \"$name\" has been deleted!")
-                } catch (e: SQLException) {
-                    LOGGER.error("Could not delete character.", e)
+                } catch (e: java.sql.SQLException) {
+                    org.kud.roleplay.LOGGER.error("Could not delete character.", e)
                     context.replyFail("an error occurred while deleting your character.")
                 }
             } else {

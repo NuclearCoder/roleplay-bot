@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit
 val LOGGER: Logger = LoggerFactory.getLogger(RoleplayBot::class.java)
 
 val URL_GET_TIMEOUT = TimeUnit.SECONDS.toMillis(3).toInt()
-val BOT_KEEP_ALIVE = TimeUnit.SECONDS.toMillis(5)
+val SHUTDOWN_WAIT = TimeUnit.SECONDS.toMillis(3)
 
 val CONFIG_FILENAME = "./roleplaybot.cfg"
 val CONFIG_AUTOSAVE_PERIOD = TimeUnit.MINUTES.toMillis(15)

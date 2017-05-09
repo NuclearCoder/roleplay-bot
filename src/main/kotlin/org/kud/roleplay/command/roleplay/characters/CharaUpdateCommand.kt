@@ -1,4 +1,4 @@
-package org.kud.roleplay.command.roleplay
+package org.kud.roleplay.command.roleplay.characters
 
 import org.kud.roleplay.LOGGER
 import org.kud.roleplay.command.meta.CommandContext

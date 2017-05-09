@@ -1,5 +1,6 @@
 package org.kud.roleplay.command.meta
 
+import club.minnced.kjda.plusAssign
 import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.MessageBuilder
 import net.dv8tion.jda.core.entities.Message
@@ -34,6 +35,7 @@ import java.util.*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+@Deprecated("It will be replaced by a more general extension method on MessageBuilder")
 class CommandResponder internal constructor(private val context: CommandContext) {
 
     private var content = Optional.empty<String>()
@@ -98,7 +100,11 @@ class CommandResponder internal constructor(private val context: CommandContext)
         val rootBuilder = MessageBuilder()
 
         content.ifPresent {
-            rootBuilder.append(emote).append(" | **").append(context.event.member.effectiveName).append("**, ").append(it)
+            rootBuilder += emote
+            rootBuilder += " | **"
+            rootBuilder += context.event.member.effectiveName
+            rootBuilder += "**, "
+            rootBuilder += it
         }
 
         embed.ifPresent {

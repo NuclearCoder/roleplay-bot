@@ -34,7 +34,8 @@ dependencies {
     compile group: 'com.sedmelluq', name: 'lavaplayer', version: '1.2.36'
 
     compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.+'
-    compile group: 'net.dv8tion', name: 'JDA', version: '3.0.0_191'
+    compile group: 'net.dv8tion', name: 'JDA', version: '3.0.0_193'
+    compile group: 'com.github.JDA-Applications', name:"Kotlin-JDA", version: "master-SNAPSHOT"
 
     // The production code uses the SLF4J logging API at compile time
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.+'
