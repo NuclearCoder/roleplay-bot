@@ -33,15 +33,15 @@ class CommandService(private val bot: RoleplayBot,
         }
     }
 
-    private fun processCommand(event: MessageReceivedEvent, tokenizer: MessageTokenizer,
-                               name: String, registry: CommandRegistry) {
+    private tailrec fun processCommand(event: MessageReceivedEvent, tokenizer: MessageTokenizer,
+                                       name: String, registry: CommandRegistry) {
         val command = registry.search(name)
-        if (command is RegisteredCommand.Branch) {
-            processCommand(event, tokenizer, tokenizer.nextWord(), command.registry)
-        } else if (command is RegisteredCommand.Final) {
-            command.command.call(CommandContext(event, bot, event.message, name, tokenizer))
-        } else { /* command == null */
-            registry.fallback.call(CommandContext(event, bot, event.message, "", tokenizer))
+        when (command) {
+            is RegisteredCommand.Branch -> processCommand(event, tokenizer, tokenizer.nextWord(), command.registry)
+            is RegisteredCommand.Final -> command.command.call(CommandContext(event, bot, event.message, name, tokenizer))
+            else -> { /* command == null */
+                registry.fallback.call(CommandContext(event, bot, event.message, "", tokenizer))
+            }
         }
     }
 

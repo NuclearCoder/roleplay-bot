@@ -36,15 +36,9 @@ class CachedRequest<in D, out R>(timer: Timer, private val request: Request<D, R
 
     fun clearCache() = cache.clear()
 
-    override fun get(conn: Connection, data: D): R {
-        val cacheObj = cache[data]
-        return if (cacheObj != null) {
-            cacheObj.x
-        } else {
-            val obj = request.get(conn, data)
-            cache[data] = CacheResult(obj, System.currentTimeMillis())
-            obj
-        }
-    }
+    override fun get(conn: Connection, data: D): R =
+            cache[data]?.x ?: request.get(conn, data).also {
+                cache[data] = CacheResult(it, System.currentTimeMillis())
+            }
 
 }

@@ -181,6 +181,6 @@ class MessageTokenizer(val text: String) {
      * True if and only if the cursor hasn't reached the end.
      */
     val hasMore: Boolean
-        get() = cursor < text.length
+        get() = cursor < text.length - 1
 
 }

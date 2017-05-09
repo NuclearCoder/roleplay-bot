@@ -2,8 +2,9 @@ package org.kud.roleplay.util
 
 fun stringFromTime(time: Int): String {
     val sec = time % 60
-    val min = (time / 60) % 60
-    val hrs = time / 3600
+    val minTime = time / 60
+    val min = minTime % 60
+    val hrs = minTime / 60
 
     val sb = StringBuilder()
 

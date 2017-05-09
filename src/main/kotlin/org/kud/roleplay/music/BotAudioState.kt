@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 class BotAudioState {
 
-    private val musicManagers = ConcurrentHashMap<String, GuildMusicManager>()
+    private val musicManagers = ConcurrentHashMap<Long, GuildMusicManager>()
 
     private val playerManager: AudioPlayerManager = DefaultAudioPlayerManager().apply {
         registerSourceManager(YoutubeAudioSourceManager())
@@ -44,8 +44,7 @@ class BotAudioState {
     }
 
     fun getMusicManager(guild: Guild): GuildMusicManager {
-        val guildId = guild.id
-        return musicManagers.computeIfAbsent(guildId) {
+        return musicManagers.computeIfAbsent(guild.idLong) {
             GuildMusicManager(playerManager).apply { player.volume = 100 }
         }
     }
