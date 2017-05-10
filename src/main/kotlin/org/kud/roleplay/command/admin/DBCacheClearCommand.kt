@@ -6,7 +6,7 @@ import org.kud.roleplay.command.meta.command.OwnerRestrictedCommand
 class DBCacheClearCommand : OwnerRestrictedCommand() {
     override fun onInvoke(context: CommandContext) {
         context.bot.database.clearCache()
-        context.replySuccess("database cache has been cleared.")
+        context.reply("database cache has been cleared.")
     }
 
 }

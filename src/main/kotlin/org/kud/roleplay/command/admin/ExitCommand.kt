@@ -6,10 +6,7 @@ import org.kud.roleplay.command.meta.command.OwnerRestrictedCommand
 class ExitCommand : OwnerRestrictedCommand() {
 
     override fun onInvoke(context: CommandContext) {
-        context.reply {
-            setMessage("shutting down...")
-            setEmote(":wave:")
-        }
+        context.reply(":wave:", "shutting down...")
         context.bot.terminate()
     }
 

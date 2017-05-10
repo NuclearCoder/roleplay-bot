@@ -18,7 +18,7 @@ class CharaCreateCommand : Command() {
             if (!context.bot.database.existsRoleplayCharacter(guildId, userId, name)) {
                 try {
                     context.bot.database.createRoleplayCharacter(guildId, userId, name)
-                    context.replySuccess("your character \"$name\" has been created!")
+                    context.reply("your character \"$name\" has been created!")
                 } catch (e: SQLException) {
                     org.kud.roleplay.LOGGER.error("Could not create character.", e)
                     context.replyFail("an error occurred while creating your character.")

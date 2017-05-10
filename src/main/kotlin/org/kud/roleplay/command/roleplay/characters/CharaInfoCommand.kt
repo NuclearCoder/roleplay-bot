@@ -27,7 +27,7 @@ class CharaInfoCommand : Command() {
                     try {
                         val character = context.bot.database.getRoleplayCharacter(guildId, userId, name)
                         if (character != null) {
-                            context.replySuccess("here is character info for \"${character.name}\", created by **${guild.getMember(user).effectiveName}** :\n${character.content}")
+                            context.reply("here is character info for \"${character.name}\", created by **${guild.getMember(user).effectiveName}** :\n${character.content}")
                         } else {
                             context.replyFail("there was no character with that name.")
                         }

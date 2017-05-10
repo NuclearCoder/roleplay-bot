@@ -16,7 +16,7 @@ class CharaDeleteCommand : Command() {
             if (context.bot.database.existsRoleplayCharacter(guildId, userId, name)) {
                 try {
                     context.bot.database.deleteRoleplayCharacter(guildId, userId, name)
-                    context.replySuccess("your character \"$name\" has been deleted!")
+                    context.reply("your character \"$name\" has been deleted!")
                 } catch (e: SQLException) {
                     org.kud.roleplay.LOGGER.error("Could not delete character.", e)
                     context.replyFail("an error occurred while deleting your character.")

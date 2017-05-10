@@ -1,5 +1,8 @@
 package org.kud.roleplay.command.meta
 
+import club.minnced.kjda.entities.send
+import club.minnced.kjda.plusAssign
+import net.dv8tion.jda.core.MessageBuilder
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import org.kud.roleplay.RoleplayBot
@@ -28,36 +31,28 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-//bot: RoleplayBot, message: IMessage, command: String, args: Array<String>
+
 class CommandContext(val event: MessageReceivedEvent,
                      val bot: RoleplayBot,
                      val message: Message,
                      val command: String,
                      val tokenizer: MessageTokenizer) {
 
-    /*fun createResponder(): CommandResponder {
-        return CommandResponder(this)
-    }*/
-
-    fun reply(init: CommandResponder.() -> Unit) {
-        val cmdr = CommandResponder(this)
-        cmdr.init()
-        cmdr.queue()
-    }
-
-    fun replySuccess(message: String, and: CommandResponder.() -> Unit = {}) {
-        reply {
-            setMessage(message)
-            and()
+    inline fun reply(emote: String = REPLY_SUCCESS, crossinline then: MessageBuilder.() -> Unit) {
+        event.channel.send {
+            replyPrefix(event.member, emote)
+            then()
         }
     }
 
-    fun replyFail(message: String, and: CommandResponder.() -> Unit = {}) {
-        reply {
-            setMessage(message)
-            fail()
-            and()
-        }
+    fun reply(emote: String, content: String) = reply(emote) { this += content }
+
+    fun reply(content: String) = reply(REPLY_SUCCESS, content)
+    fun replyFail(content: String) = reply(REPLY_FAILURE, content)
+
+    fun replyMissingArguments(details: String) = reply(REPLY_FAILURE) {
+        this += "missing arguments: "
+        this += details
     }
 
 }

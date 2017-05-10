@@ -19,7 +19,7 @@ class CharaListCommand : Command() {
 
             if (characters.isNotEmpty()) {
                 val list = characters.map { it.name }.joinToString(prefix = "```\n", separator = "\n", postfix = "```")
-                context.replySuccess("here are the characters created by this user.\n$list")
+                context.reply("here are the characters created by this user.\n$list")
             } else {
                 context.replyFail("this user has no character.")
             }

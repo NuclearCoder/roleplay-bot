@@ -22,7 +22,7 @@ class CharaUpdateCommand : Command() {
 
                     try {
                         context.bot.database.updateRoleplayCharacter(guildId, userId, name, content)
-                        context.replySuccess("your character \"$name\" has been updated!")
+                        context.reply("your character \"$name\" has been updated!")
                     } catch (e: SQLException) {
                         LOGGER.error("Could not update character.", e)
                         context.replyFail("an error occurred while updating your character.")

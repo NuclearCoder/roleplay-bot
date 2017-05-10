@@ -33,9 +33,6 @@ class MusicStopCommand : Command() {
             context.event.guild.audioManager.closeAudioConnection()
             this.player.destroy()
         }
-        context.reply {
-            success()
-            setMessage("roleplay music stopped.")
-        }
+        context.reply("roleplay music stopped.")
     }
 }
