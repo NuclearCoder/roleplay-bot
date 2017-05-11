@@ -9,6 +9,8 @@ class MessageHandler {
     private val expCalculator = ExperienceCalculator()
 
     fun processMessage(event: MessageReceivedEvent, bot: RoleplayBot) {
+        if (event.author.isBot) return
+
         val message = event.message
 
         val guildId = message.guild.idLong

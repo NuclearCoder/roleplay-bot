@@ -54,8 +54,9 @@ class CommandService(private val bot: RoleplayBot,
 
     @SubscribeEvent
     fun onMessage(event: MessageReceivedEvent) {
-        val tokenizer = MessageTokenizer(event.message.content)
+        if (event.author.isBot) return
 
+        val tokenizer = MessageTokenizer(event.message.content)
         if (tokenizer.skip(prefix)) { // is a command
             processCommand(event, tokenizer, tokenizer.nextWord(), registry)
         } else { // is a message
