@@ -26,12 +26,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 
-sealed class RegisteredCommand(val name: String, val command: Command, val hasSubCommands: Boolean) {
+sealed class RegisteredCommand(val name: String, val command: Command) {
 
     internal class Final(name: String, command: Command)
-        : RegisteredCommand(name, command, false)
+        : RegisteredCommand(name, command)
 
     internal class Branch(name: String, command: Command, val registry: CommandRegistry)
-        : RegisteredCommand(name, command, true)
+        : RegisteredCommand(name, command)
 
 }

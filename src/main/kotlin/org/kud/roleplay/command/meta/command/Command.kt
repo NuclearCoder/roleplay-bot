@@ -6,8 +6,4 @@ abstract class Command(val requiredPermission: PermissionLevel = PermissionLevel
 
     abstract fun onInvoke(context: CommandContext)
 
-    object Pass : Command() {
-        override fun onInvoke(context: CommandContext) = Unit
-    }
-
 }
