@@ -1,6 +1,4 @@
-package org.kud.roleplay.roleplay.user
-
-import org.kud.roleplay.roleplay.experience.getLevelFor
+package org.kud.roleplay.roleplay.experience
 
 data class UserExperience(private var _total: Long, private var _multiplier: Double) {
 

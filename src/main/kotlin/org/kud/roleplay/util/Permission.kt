@@ -38,11 +38,6 @@ fun Member.getPermissionLevel(owner: User, context: CommandContext): PermissionL
         context.event.channelType == ChannelType.PRIVATE -> PermissionLevel.Private
         else -> PermissionLevel.User
     }
-    /*if () return PermissionLevel.BotOwner
-    if (this.isOwner) return PermissionLevel.ServerOwner
-    if (this.hasPermission(Permission.KICK_MEMBERS) || this.hasPermission(Permission.BAN_MEMBERS)) return PermissionLevel.Moderator
-    if (context.event.channelType == ChannelType.PRIVATE) return PermissionLevel.Private
-    return PermissionLevel.User*/
 }
 
 fun Member.hasSufficientPermissions(owner: User, context: CommandContext, desired: PermissionLevel): Boolean {

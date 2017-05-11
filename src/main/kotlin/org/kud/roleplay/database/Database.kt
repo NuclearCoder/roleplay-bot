@@ -3,8 +3,8 @@ package org.kud.roleplay.database
 import org.kud.roleplay.database.adapter.DatabaseAdapter
 import org.kud.roleplay.database.adapter.request.CachedRequest
 import org.kud.roleplay.roleplay.Character
-import org.kud.roleplay.roleplay.user.User
-import org.kud.roleplay.roleplay.user.UserExperience
+import org.kud.roleplay.roleplay.experience.UserExperience
+import org.kud.roleplay.roleplay.server.User
 import org.kud.roleplay.util.Config
 import org.kud.roleplay.util.use
 import java.sql.Connection
@@ -115,7 +115,7 @@ class Database(config: Config) : DatabaseAdapter(config) {
         }
     }
 
-    private val reqUserLeaderboards = CachedRequest(timer, "SELECT id_user, exp_total, exp_mult FROM users WHERE id_guild = ? ORDER BY DESC total_exp LIMIT ?;")
+    private val reqUserLeaderboards = CachedRequest(timer, "SELECT id_user, exp_total, exp_mult FROM users WHERE id_guild = ? ORDER BY exp_total DESC LIMIT ?;")
     { st, (guildId, topCount): Pair<Long, Int> ->
         st.setLong(1, guildId)
         st.setInt(2, topCount)

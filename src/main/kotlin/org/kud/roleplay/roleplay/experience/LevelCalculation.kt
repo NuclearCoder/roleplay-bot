@@ -16,6 +16,11 @@ private val levelExperience = LongArray(levelThreshold + 1).apply {
 private val levelThresholdExperience = levelExperience.last()
 
 /**
+ * Returns the experience value for the next level.
+ */
+fun getLevelValue(level: Int) = levelValues[level.coerceAtMost(levelThreshold - 1)]
+
+/**
  * Returns the total experience needed to reach a level.
  */
 fun getLevelExperience(level: Int) =

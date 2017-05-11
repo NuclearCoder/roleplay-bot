@@ -1,5 +1,6 @@
 package org.kud.roleplay.command.roleplay.characters
 
+import org.kud.roleplay.LOGGER
 import org.kud.roleplay.command.meta.CommandContext
 import org.kud.roleplay.command.meta.command.Command
 import java.sql.SQLException
@@ -32,7 +33,7 @@ class CharaInfoCommand : Command() {
                             context.replyFail("there was no character with that name.")
                         }
                     } catch (e: SQLException) {
-                        org.kud.roleplay.LOGGER.error("Could not fetch character info.", e)
+                        LOGGER.error("Could not fetch character info.", e)
                         context.replyFail("an error occurred while fetching character info.")
                     }
                 } else {

@@ -8,8 +8,8 @@ import java.sql.SQLException
 class CharaUpdateCommand : Command() {
 
     override fun onInvoke(context: CommandContext) {
-        val guildId = context.message.guild.idLong
-        val userId = context.message.author.idLong
+        val guildId = context.event.guild.idLong
+        val userId = context.event.author.idLong
 
         if (context.tokenizer.hasMore) {
             val name = context.tokenizer.tailUntil { it == '\n' }

@@ -3,12 +3,8 @@ package org.kud.roleplay.roleplay.message
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import org.kud.roleplay.RoleplayBot
 import org.kud.roleplay.roleplay.experience.ExperienceCalculator
-import org.kud.roleplay.roleplay.user.User
-import org.kud.roleplay.roleplay.user.UserExperience
 
 class MessageHandler {
-
-    private val users = mutableMapOf<Pair<Long, Long>, User>()
 
     private val expCalculator = ExperienceCalculator()
 
@@ -22,9 +18,7 @@ class MessageHandler {
             bot.database.initUser(guildId, userId)
         }
 
-        val user = users.computeIfAbsent(Pair(guildId, userId)) {
-            User(guildId, userId, bot.database.getUserExperience(guildId, userId) ?: UserExperience(0, 1.0))
-        }
+        val user = bot.users[guildId, userId]
 
         val rawGain = expCalculator.calculate(message.content)
         val actualGain = (user.experience.multiplier * rawGain).toLong()

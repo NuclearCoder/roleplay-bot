@@ -19,15 +19,19 @@ import org.kud.roleplay.command.roleplay.characters.CharaDeleteCommand
 import org.kud.roleplay.command.roleplay.characters.CharaInfoCommand
 import org.kud.roleplay.command.roleplay.characters.CharaListCommand
 import org.kud.roleplay.command.roleplay.characters.CharaUpdateCommand
+import org.kud.roleplay.command.roleplay.experience.ExperienceLeaderboardCommand
+import org.kud.roleplay.command.roleplay.experience.ExperienceShowCommand
 import org.kud.roleplay.command.test.TestCommand
 import org.kud.roleplay.database.Database
 import org.kud.roleplay.music.BotAudioState
+import org.kud.roleplay.roleplay.server.Users
 import org.kud.roleplay.util.Config
 
 class RoleplayBot(private val config: Config) {
 
     val database = Database(config)
     val audio = BotAudioState()
+    val users = Users(database)
 
     val commands = CommandService(this@RoleplayBot) {
         register("exit", ExitCommand())
@@ -50,6 +54,11 @@ class RoleplayBot(private val config: Config) {
             register("update", CharaUpdateCommand())
             register("list", CharaListCommand())
             register("info", CharaInfoCommand())
+        }
+
+        register("exp") {
+            register("show", ExperienceShowCommand())
+            register("top", ExperienceLeaderboardCommand())
         }
     }
 

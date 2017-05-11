@@ -9,6 +9,7 @@ class CharaCommand : Command() {
 
     override fun onInvoke(context: CommandContext) {
         context.replyFail("you haven't specified a valid sub-command.\n```\ncreate | delete | update | list | info```")
-        // TODO: generate the command list from registry
+        // TODO: generate a fallback method automatically
     }
+
 }
