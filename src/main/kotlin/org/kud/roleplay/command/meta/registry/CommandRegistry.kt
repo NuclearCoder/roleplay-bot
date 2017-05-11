@@ -1,32 +1,36 @@
 package org.kud.roleplay.command.meta.registry
 
+import org.kud.roleplay.command.meta.CommandContext
 import org.kud.roleplay.command.meta.command.Command
 
 class CommandRegistry private constructor(builder: RegistryBuilder) {
 
-    val commands = builder.commands
-    val fallback = builder.fallback
+    val fallback = builder.fallback ?: FallbackCommand()
+    val commands = builder.commands.apply {
+        put("", RegisteredCommand.Final("", fallback))
+    }
 
     constructor(builder: RegistryBuilder.() -> Unit)
             : this(RegistryBuilder().apply(builder))
 
-    fun search(name: String): RegisteredCommand? {
-        // prefix lookup in sorted map
-        val tail = commands.tailMap(name)
-        return if (!tail.isEmpty()) {
-            tail.firstKey().let {
-                if (it.startsWith(name)) tail[it] else null
+    fun search(name: String): RegisteredCommand? =
+            commands.tailMap(name).let {
+                // prefix lookup in sorted map
+                tail ->
+                if (!tail.isEmpty()) {
+                    tail.firstKey().let {
+                        if (it.startsWith(name)) tail[it] else null
+                    }
+                } else null
             }
-        } else null
-    }
 
     class RegistryBuilder internal constructor() {
 
-        internal var fallback: Command = Command.Pass
+        internal var fallback: Command? = null
         internal val commands = sortedMapOf<String, RegisteredCommand>()
 
         // set fallback command
-        fun fallback(command: Command) {
+        fun fallback(command: Command?) {
             fallback = command
         }
 
@@ -40,6 +44,15 @@ class CommandRegistry private constructor(builder: RegistryBuilder) {
             commands[name] = CommandRegistry(subBuilder).let {
                 RegisteredCommand.Branch(name, it.fallback, it)
             }
+        }
+
+    }
+
+    inner class FallbackCommand : Command() {
+
+        override fun onInvoke(context: CommandContext) {
+            val list = commands.keys.filter(String::isNotEmpty).joinToString(prefix = "```\n", separator = " | ", postfix = "```")
+            context.replyFail("you haven't specified a valid sub-command.\n$list")
         }
 
     }

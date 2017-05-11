@@ -53,6 +53,18 @@ class MessageTokenizer(val text: String) {
     }
 
     /**
+     * Returns the next string that contains matching characters.
+     */
+    fun nextMatchingWhile(predicate: (Char) -> Boolean): String? {
+        skipWhitespaces()
+        val start = cursor
+        while (cursor < text.length && !text[cursor].isWhitespace() && predicate(text[cursor])) {
+            cursor++
+        }
+        return text.substring(start, cursor)
+    }
+
+    /**
      * Returns the next word, that is, the text from the cursor to the next whitespace (exclusive).
      * The returned string is empty if there was no non-empty word past the cursor.
      * The cursor skips all whitespaces preceeding the word.
@@ -82,7 +94,7 @@ class MessageTokenizer(val text: String) {
      */
     fun nextInt(): Int? {
         return try {
-            nextMatchingOrNull(Char::isDigit)?.toInt()
+            nextMatchingWhile(Char::isDigit)?.toInt()
         } catch (e: NumberFormatException) {
             null
         }
@@ -95,7 +107,7 @@ class MessageTokenizer(val text: String) {
      */
     fun nextLong(): Long? {
         return try {
-            nextMatchingOrNull(Char::isDigit)?.toLong()
+            nextMatchingWhile(Char::isDigit)?.toLong()
         } catch (e: NumberFormatException) {
             null
         }
@@ -114,7 +126,7 @@ class MessageTokenizer(val text: String) {
         // WARNING: big mess to parse mentions without regular expressions
 
         val userID = if (cursor + 4 < text.length) {
-            if (text[cursor++] == '<' || text[cursor++] == '@') {
+            if (text[cursor++] == '<' && text[cursor++] == '@') {
                 if (text[cursor] == '!') cursor++ // skip the ! nickname mention character
                 val number = nextLong()
                 if (cursor < text.length && text[cursor++] == '>') number
@@ -142,7 +154,7 @@ class MessageTokenizer(val text: String) {
         // WARNING: big mess to parse mentions without regular expressions
 
         val roleID = if (cursor + 3 < text.length) {
-            if (text[cursor++] == '<' || text[cursor++] == '&') {
+            if (text[cursor++] == '<' && text[cursor++] == '&') {
                 val number = nextLong()
                 if (cursor < text.length && text[cursor++] == '>') number
                 else null

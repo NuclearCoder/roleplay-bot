@@ -13,7 +13,6 @@ import org.kud.roleplay.command.admin.ExitCommand
 import org.kud.roleplay.command.meta.CommandService
 import org.kud.roleplay.command.music.MusicStartCommand
 import org.kud.roleplay.command.music.MusicStopCommand
-import org.kud.roleplay.command.roleplay.characters.CharaCommand
 import org.kud.roleplay.command.roleplay.characters.CharaCreateCommand
 import org.kud.roleplay.command.roleplay.characters.CharaDeleteCommand
 import org.kud.roleplay.command.roleplay.characters.CharaInfoCommand
@@ -48,7 +47,6 @@ class RoleplayBot(private val config: Config) {
         }
 
         register("chara") {
-            fallback(CharaCommand())
             register("create", CharaCreateCommand())
             register("delete", CharaDeleteCommand())
             register("update", CharaUpdateCommand())
@@ -56,10 +54,8 @@ class RoleplayBot(private val config: Config) {
             register("info", CharaInfoCommand())
         }
 
-        register("exp") {
-            register("show", ExperienceShowCommand())
-            register("top", ExperienceLeaderboardCommand())
-        }
+        register("rank", ExperienceShowCommand())
+        register("top", ExperienceLeaderboardCommand())
     }
 
     val client = client(AccountType.BOT) {
