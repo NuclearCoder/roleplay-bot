@@ -54,7 +54,7 @@ class RoleplayBot(private val config: Config) {
             register("info", CharaInfoCommand())
         }
 
-        register("rank", ExperienceShowCommand())
+        register("exp", ExperienceShowCommand())
         register("top", ExperienceLeaderboardCommand())
     }
 
