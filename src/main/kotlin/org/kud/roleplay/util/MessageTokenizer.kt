@@ -169,6 +169,33 @@ class MessageTokenizer(val text: String) {
     }
 
     /**
+     * Returns the next channel mention or null if there is no match.
+     * The cursor skips all whitespaces preceeding the mention.
+     * The cursor is only moved further if a channel mention was found.
+     */
+    fun nextChannelMention(): Long? {
+        skipWhitespaces()
+        // a channel mention is <#xxx>
+        val initialCursor = cursor
+
+        // WARNING: big mess to parse mentions without regular expressions
+
+        val channelId = if (cursor + 3 < text.length) {
+            if (text[cursor++] == '<' && text[cursor++] == '#') {
+                val number = nextLong()
+                if (cursor < text.length && text[cursor++] == '>') number
+                else null
+            } else null
+        } else null
+
+        if (channelId == null) {
+            cursor = initialCursor // reset cursor if no mention was found
+        }
+
+        return channelId
+    }
+
+    /**
      * Returns the rest of the string as-is, starting for the first non-whitespace character.
      */
     fun tail(): String {
@@ -183,7 +210,7 @@ class MessageTokenizer(val text: String) {
     fun tailUntil(predicate: (Char) -> Boolean): String {
         skipWhitespaces()
         val start = cursor
-        while (cursor < text.length && predicate(text[cursor])) {
+        while (cursor < text.length && !predicate(text[cursor])) {
             cursor++
         }
         return text.substring(start, cursor)
