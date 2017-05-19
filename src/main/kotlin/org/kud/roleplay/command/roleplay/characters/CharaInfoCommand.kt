@@ -1,9 +1,8 @@
 package org.kud.roleplay.command.roleplay.characters
 
-import org.kud.roleplay.LOGGER
 import org.kud.roleplay.command.meta.CommandContext
 import org.kud.roleplay.command.meta.command.Command
-import java.sql.SQLException
+import org.kud.roleplay.database.Character
 
 class CharaInfoCommand : Command() {
 
@@ -24,18 +23,10 @@ class CharaInfoCommand : Command() {
             if (context.tokenizer.hasMore) {
                 val name = context.tokenizer.tail()
 
-                if (context.bot.database.existsRoleplayCharacter(guildId, userId, name)) {
-                    try {
-                        val character = context.bot.database.getRoleplayCharacter(guildId, userId, name)
-                        if (character != null) {
-                            context.reply("here is character info for \"${character.name}\", created by **${guild.getMember(user).effectiveName}** :\n${character.content}")
-                        } else {
-                            context.replyFail("there was no character with that name.")
-                        }
-                    } catch (e: SQLException) {
-                        LOGGER.error("Could not fetch character info.", e)
-                        context.replyFail("an error occurred while fetching character info.")
-                    }
+                if (Character.exists(guildId, userId, name)) {
+                    val character = Character.find(Character.equals(guildId, userId, name)).first()
+
+                    context.reply("here is character info for \"${character.name}\", created by **${guild.getMember(user).effectiveName}** :\n${character.content}")
                 } else {
                     context.replyFail("there was no character with that name.")
                 }

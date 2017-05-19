@@ -1,9 +1,11 @@
 package org.kud.roleplay.command.roleplay.characters
 
-import org.kud.roleplay.LOGGER
+import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.kud.roleplay.command.meta.CommandContext
 import org.kud.roleplay.command.meta.command.Command
-import java.sql.SQLException
+import org.kud.roleplay.database.Character
+import org.kud.roleplay.database.Characters
 
 class CharaDeleteCommand : Command() {
 
@@ -14,16 +16,14 @@ class CharaDeleteCommand : Command() {
         if (context.tokenizer.hasMore) {
             val name = context.tokenizer.tail()
 
-            if (context.bot.database.existsRoleplayCharacter(guildId, userId, name)) {
-                try {
-                    context.bot.database.deleteRoleplayCharacter(guildId, userId, name)
+            transaction {
+                if (Character.exists(guildId, userId, name)) {
+                    Characters.deleteWhere(Character.eqOp(guildId, userId, name))
+
                     context.reply("your character \"$name\" has been deleted!")
-                } catch (e: SQLException) {
-                    LOGGER.error("Could not delete character.", e)
-                    context.replyFail("an error occurred while deleting your character.")
+                } else {
+                    context.replyFail("you have no character with that name.")
                 }
-            } else {
-                context.replyFail("you have no character with that name.")
             }
         } else {
             context.replyFail("you haven't specified a character name.")

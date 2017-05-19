@@ -3,7 +3,6 @@ package org.kud.roleplay.util
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.ChannelType
 import net.dv8tion.jda.core.entities.Member
-import net.dv8tion.jda.core.entities.User
 import org.kud.roleplay.command.meta.CommandContext
 import org.kud.roleplay.command.meta.command.PermissionLevel
 
@@ -30,9 +29,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-fun Member.getPermissionLevel(owner: User, context: CommandContext): PermissionLevel {
+fun Member.getPermissionLevel(context: CommandContext): PermissionLevel {
     return when {
-        user.id == owner.id -> PermissionLevel.BotOwner
+        user.id == context.botOwner.id -> PermissionLevel.BotOwner
         isOwner -> PermissionLevel.ServerOwner
         hasPermission(Permission.KICK_MEMBERS) || hasPermission(Permission.BAN_MEMBERS) -> PermissionLevel.Moderator
         context.event.channelType == ChannelType.PRIVATE -> PermissionLevel.Private
@@ -40,6 +39,6 @@ fun Member.getPermissionLevel(owner: User, context: CommandContext): PermissionL
     }
 }
 
-fun Member.hasSufficientPermissions(owner: User, context: CommandContext, desired: PermissionLevel): Boolean {
-    return getPermissionLevel(owner, context).ordinal >= desired.ordinal
+fun Member.hasSufficientPermissions(context: CommandContext, desired: PermissionLevel): Boolean {
+    return getPermissionLevel(context) >= desired
 }

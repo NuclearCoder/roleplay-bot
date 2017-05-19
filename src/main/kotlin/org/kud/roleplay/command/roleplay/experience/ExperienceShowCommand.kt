@@ -2,8 +2,10 @@ package org.kud.roleplay.command.roleplay.experience
 
 import club.minnced.kjda.entities.send
 import club.minnced.kjda.plusAssign
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.kud.roleplay.command.meta.CommandContext
 import org.kud.roleplay.command.meta.command.Command
+import org.kud.roleplay.database.User
 import org.kud.roleplay.roleplay.experience.getLevelValue
 
 class ExperienceShowCommand : Command() {
@@ -14,13 +16,15 @@ class ExperienceShowCommand : Command() {
 
         val member = context.event.guild.getMemberById(userId)
 
-        val experience = context.bot.users[guildId, userId].experience
+        transaction {
+            val user = User.getOrInit(guildId, userId)
 
-        context.event.channel.send {
-            this += "**${member.effectiveName}**"
-            this += " :sparkles: level **${experience.level}**\n"
-            this += "Level completion: **${experience.levelXP}**/**${getLevelValue(experience.level)}**\n"
-            this += "Total experience: **${experience.total}**"
+            context.event.channel.send {
+                this += "**${member.effectiveName}**"
+                this += " :sparkles: level **${user.experienceLevel}**\n"
+                this += "Level completion: **${user.experienceRemaining}**/**${getLevelValue(user.experienceLevel)}**\n"
+                this += "Total experience: **${user.experienceTotal}**"
+            }
         }
     }
 

@@ -1,9 +1,9 @@
 package org.kud.roleplay.command.roleplay.characters
 
-import org.kud.roleplay.LOGGER
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.kud.roleplay.command.meta.CommandContext
 import org.kud.roleplay.command.meta.command.Command
-import java.sql.SQLException
+import org.kud.roleplay.database.Character
 
 class CharaCreateCommand : Command() {
 
@@ -16,16 +16,17 @@ class CharaCreateCommand : Command() {
 
             // TODO: sanity check for name
 
-            if (!context.bot.database.existsRoleplayCharacter(guildId, userId, name)) {
-                try {
-                    context.bot.database.createRoleplayCharacter(guildId, userId, name)
+            transaction {
+                if (!Character.exists(guildId, userId, name)) {
+                    Character.new {
+                        this.guildId = guildId
+                        this.userId = userId
+                        this.name = name
+                    }
                     context.reply("your character \"$name\" has been created!")
-                } catch (e: SQLException) {
-                    LOGGER.error("Could not create character.", e)
-                    context.replyFail("an error occurred while creating your character.")
+                } else {
+                    context.replyFail("you already have a character with that name.")
                 }
-            } else {
-                context.replyFail("you already have a character with that name.")
             }
         } else {
             context.replyFail("you haven't specified a character name.")

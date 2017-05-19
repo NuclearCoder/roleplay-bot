@@ -7,6 +7,6 @@ import org.kud.roleplay.command.meta.command.Command
 class TestCommand : Command() {
     override fun onInvoke(context: CommandContext) {
         LOGGER.info("Test command.")
-        context.reply("test!")
+        context.reply("<:happuChino:314226131014254592>")
     }
 }

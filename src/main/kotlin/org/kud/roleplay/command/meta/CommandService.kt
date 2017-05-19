@@ -3,7 +3,7 @@ package org.kud.roleplay.command.meta
 import net.dv8tion.jda.core.entities.User
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import net.dv8tion.jda.core.hooks.SubscribeEvent
-import org.kud.roleplay.RoleplayBot
+import org.kud.roleplay.bot.RoleplayBot
 import org.kud.roleplay.command.meta.command.Command
 import org.kud.roleplay.command.meta.registry.CommandRegistry
 import org.kud.roleplay.command.meta.registry.RegisteredCommand
@@ -37,15 +37,13 @@ class CommandService(private val bot: RoleplayBot,
         val command = registry.search(name)
         when (command) {
             is RegisteredCommand.Branch -> processCommand(event, tokenizer, tokenizer.nextWord(), command.registry)
-            is RegisteredCommand.Final -> command.command.call(CommandContext(event, bot, event.message, name, tokenizer))
-            else -> { /* command == null */
-                registry.fallback.call(CommandContext(event, bot, event.message, "", tokenizer))
-            }
+            is RegisteredCommand.Final -> command.command.call(CommandContext(event, bot, owner, event.message, name, tokenizer))
+            else -> registry.fallback.call(CommandContext(event, bot, owner, event.message, "", tokenizer))
         }
     }
 
     private fun Command.call(context: CommandContext) {
-        if (context.event.member.hasSufficientPermissions(owner, context, this.requiredPermission)) {
+        if (context.event.member.hasSufficientPermissions(context, this.requiredPermission)) {
             this.onInvoke(context)
         } else {
             context.replyFail("this command requires the `${this.requiredPermission.name}` permission.")
@@ -61,7 +59,7 @@ class CommandService(private val bot: RoleplayBot,
             if (tokenizer.skip(prefix)) { // is a command
                 processCommand(event, tokenizer, tokenizer.nextWord(), registry)
             } else { // is a message
-                messageHandler.processMessage(event, bot)
+                messageHandler.processMessage(event)
             }
         }
     }

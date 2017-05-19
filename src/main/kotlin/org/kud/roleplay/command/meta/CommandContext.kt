@@ -4,8 +4,9 @@ import club.minnced.kjda.entities.send
 import club.minnced.kjda.plusAssign
 import net.dv8tion.jda.core.MessageBuilder
 import net.dv8tion.jda.core.entities.Message
+import net.dv8tion.jda.core.entities.User
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
-import org.kud.roleplay.RoleplayBot
+import org.kud.roleplay.bot.RoleplayBot
 import org.kud.roleplay.util.MessageTokenizer
 
 /**
@@ -34,6 +35,7 @@ SOFTWARE.
 
 class CommandContext(val event: MessageReceivedEvent,
                      val bot: RoleplayBot,
+                     val botOwner: User,
                      val message: Message,
                      val command: String,
                      val tokenizer: MessageTokenizer) {

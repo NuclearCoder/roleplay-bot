@@ -51,7 +51,11 @@ class CommandRegistry private constructor(builder: RegistryBuilder) {
     inner class FallbackCommand : Command() {
 
         override fun onInvoke(context: CommandContext) {
-            val list = commands.keys.filter(String::isNotEmpty).joinToString(prefix = "```\n", separator = " | ", postfix = "```")
+            val list = commands.entries
+                    .filter { it.key.isNotEmpty() && context.hasSufficientPermission(it.value.command.requiredPermission) }
+                    .map { it.key }
+                    .joinToString(prefix = "```\n", separator = " | ", postfix = "```")
+
             context.replyFail("you haven't specified a valid sub-command.\n$list")
         }
 

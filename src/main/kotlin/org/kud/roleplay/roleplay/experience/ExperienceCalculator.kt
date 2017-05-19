@@ -63,7 +63,7 @@ class ExperienceCalculator {
 
         // perhaps add a random amount there before coercing?
 
-        return finalExp.coerceIn(1L..maxGain)
+        return finalExp.coerceIn(0L..maxGain)
     }
 
     // since each part requires word-by-word reading, this method will allow to traverse the string only once.
