@@ -1,27 +1,23 @@
 package org.kud.roleplay.bot.sharded
 
-import club.minnced.kjda.client
-import net.dv8tion.jda.core.AccountType
-import net.dv8tion.jda.core.JDA
-import net.dv8tion.jda.core.JDABuilder
+import org.kud.roleplay.LOGGER
 import org.kud.roleplay.bot.RoleplayBot
+import org.kud.roleplay.bot.buildClient
+import org.kud.roleplay.bot.buildCommands
 
-class RoleplayShard(val bot: RoleplayBotSharded,
-                    val shardId: Int, val shardCount: Int,
-                    private val builder: JDABuilder.() -> Unit)
-    : RoleplayBot by bot {
+class RoleplayShard(val bot: RoleplayBotSharded, val shardId: Int, val shardCount: Int) : RoleplayBot {
 
-    private var _client = build()
-
-    override val client get(): JDA = _client
-
-    private fun build() = client(AccountType.BOT) {
-        useSharding(shardId, shardCount)
+    init {
+        LOGGER.info("Starting shard #$shardId...")
     }
 
-    fun revive() {
-        _client.shutdown(false)
-        _client = build()
-    }
+    override val config get() = bot.config
+    override val database get() = bot.database
+    override val audio get() = bot.audio
+
+    override val commands = buildCommands(this)
+    override val client = buildClient { useSharding(shardId, shardCount) }
+
+    override fun terminate() = bot.terminate()
 
 }
