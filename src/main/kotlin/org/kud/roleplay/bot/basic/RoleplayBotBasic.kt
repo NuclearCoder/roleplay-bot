@@ -8,7 +8,6 @@ import org.kud.roleplay.bot.buildCommands
 import org.kud.roleplay.util.Config
 
 class RoleplayBotBasic(config: Config) : RoleplayBotBase(config) {
-
     init {
         LOGGER.info("Starting unsharded bot...")
     }
@@ -31,6 +30,4 @@ class RoleplayBotBasic(config: Config) : RoleplayBotBase(config) {
 
         config.save()
     }
-
-
 }
