@@ -1,11 +1,9 @@
-package org.kud.roleplay.roleplay.combat.battle
+package org.kud.roleplay.util
 
-import org.kud.roleplay.database.Character
+class OrderedPair<T : Comparable<T>>(first: T, second: T) {
 
-class OrderedPair(first: Character, second: Character) {
-
-    val first: Character
-    val second: Character
+    val first: T
+    val second: T
 
     init {
         val lesser = first < second
@@ -14,7 +12,7 @@ class OrderedPair(first: Character, second: Character) {
     }
 
     override fun equals(other: Any?) = when (other) {
-        is OrderedPair -> first == other.first && second == other.second
+        is OrderedPair<*> -> first == other.first && second == other.second
         else -> super.equals(other)
     }
 

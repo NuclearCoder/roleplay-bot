@@ -22,7 +22,7 @@ object Characters : IntIdTable(name = "characters") {
     val content = text("content").default("")
 }
 
-class Character(id: EntityID<Int>) : IntEntity(id) {
+class Character(id: EntityID<Int>) : IntEntity(id), Comparable<Character> {
     companion object : IntEntityClass<Character>(Characters) {
         fun equals(guildId: Long, userId: Long, name: String) =
                 (Characters.guildId eq guildId) and
@@ -42,7 +42,7 @@ class Character(id: EntityID<Int>) : IntEntity(id) {
     var name by Characters.name
     var content by Characters.content
 
-    infix operator fun compareTo(other: Character) =
+    infix override fun compareTo(other: Character) =
             guildId.compareTo(other.guildId).let {
                 if (it != 0) it
                 else userId.compareTo(other.userId).let {
