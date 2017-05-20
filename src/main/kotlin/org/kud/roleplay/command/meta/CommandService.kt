@@ -1,6 +1,7 @@
 package org.kud.roleplay.command.meta
 
 import net.dv8tion.jda.core.entities.User
+import net.dv8tion.jda.core.events.ReadyEvent
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import net.dv8tion.jda.core.hooks.SubscribeEvent
 import org.kud.roleplay.bot.RoleplayBot
@@ -21,14 +22,24 @@ class CommandService(private val bot: RoleplayBot,
         const val prefix = cmdPref + rootCmd
     }
 
-    lateinit var owner: User
+    private var _owner: User? = null
+    private val owner get(): User = _owner ?: throw UninitializedPropertyAccessException("Owner has not been set")
 
     private val registry = CommandRegistry(commandBuilder)
     private val messageHandler = MessageHandler()
 
-    fun initAfterAttach() {
+    @SubscribeEvent
+    fun onReady(event: ReadyEvent) {
         bot.client.asBot().applicationInfo.queue {
-            owner = it.owner
+            _owner = it.owner
+        }
+
+        // block until owner is set
+        while (_owner == null) {
+            try {
+                Thread.sleep(100)
+            } catch(ignored: InterruptedException) {
+            }
         }
     }
 
