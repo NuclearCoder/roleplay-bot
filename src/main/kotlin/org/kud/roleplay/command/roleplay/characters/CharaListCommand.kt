@@ -7,7 +7,7 @@ import org.kud.roleplay.command.meta.CommandContext
 import org.kud.roleplay.command.meta.command.Command
 import org.kud.roleplay.database.Characters
 
-class CharaListCommand : Command() {
+object CharaListCommand : Command() {
 
     override fun onInvoke(context: CommandContext) {
         val guildId = context.event.guild.idLong

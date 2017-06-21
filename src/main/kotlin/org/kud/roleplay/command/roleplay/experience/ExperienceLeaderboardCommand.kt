@@ -8,7 +8,7 @@ import org.kud.roleplay.command.meta.CommandContext
 import org.kud.roleplay.command.meta.command.Command
 import org.kud.roleplay.database.Users
 
-class ExperienceLeaderboardCommand : Command() {
+object ExperienceLeaderboardCommand : Command() {
 
     override fun onInvoke(context: CommandContext) {
         val guild = context.event.guild
@@ -19,7 +19,8 @@ class ExperienceLeaderboardCommand : Command() {
             this += " :clipboard: leaderboards\n```python\n"
 
             transaction {
-                Users.select { Users.guildId eq guildId }.orderBy(Users.experienceTotal, isAsc = false).limit(10).forEachIndexed {
+                Users.select { Users.guildId eq guildId }
+                        .orderBy(Users.experienceTotal, isAsc = false).limit(10).forEachIndexed {
                     index, row ->
 
                     val userId = row[Users.userId]

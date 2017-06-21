@@ -7,7 +7,7 @@ import org.kud.roleplay.command.meta.command.Command
 import org.kud.roleplay.database.Character
 import org.kud.roleplay.database.Characters
 
-class CharaDeleteCommand : Command() {
+object CharaDeleteCommand : Command() {
 
     override fun onInvoke(context: CommandContext) {
         val guildId = context.event.guild.idLong

@@ -16,10 +16,12 @@ class CommandService(private val bot: RoleplayBot,
                      commandBuilder: CommandRegistry.RegistryBuilder.() -> Unit) {
 
     companion object {
-        const val cmdPref = "-"
+        /*const val cmdPref = "-"
         const val rootCmd = "rp"
 
-        const val prefix = cmdPref + rootCmd
+        const val prefix = cmdPref + rootCmd*/
+
+        const val prefix = "rp!"
     }
 
     private var _owner: User? = null
@@ -38,7 +40,7 @@ class CommandService(private val bot: RoleplayBot,
         while (_owner == null) {
             try {
                 Thread.sleep(100)
-            } catch(ignored: InterruptedException) {
+            } catch (ignored: InterruptedException) {
             }
         }
     }

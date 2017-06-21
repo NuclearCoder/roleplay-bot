@@ -30,7 +30,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 
-class MusicStartCommand(private val audioUrl: String) : Command() {
+object MusicStartCommand : Command() {
+
+    var audioUrl = "https://www.youtube.com/watch?v=zJvhDfYU_LU"
 
     override fun onInvoke(context: CommandContext) {
         context.bot.audio.getMusicManager(context.event.guild).run {
@@ -51,9 +53,7 @@ class MusicStartCommand(private val audioUrl: String) : Command() {
                 context.replyFail("I don't have permission to connect to your voice channel.")
             }
         }
-        context.bot.audio.loadAndPlay(
-                context.bot.audio.getMusicManager(context.event.guild),
-                context, audioUrl)
+        context.bot.audio.loadAndPlay(context.bot.audio.getMusicManager(context.event.guild), context, audioUrl)
     }
 
 

@@ -17,7 +17,9 @@ import org.kud.roleplay.command.roleplay.characters.CharaCreateCommand
 import org.kud.roleplay.command.roleplay.characters.CharaDeleteCommand
 import org.kud.roleplay.command.roleplay.characters.CharaInfoCommand
 import org.kud.roleplay.command.roleplay.characters.CharaListCommand
+import org.kud.roleplay.command.roleplay.characters.CharaSelectCommand
 import org.kud.roleplay.command.roleplay.characters.CharaUpdateCommand
+import org.kud.roleplay.command.roleplay.combat.CombatStartCommand
 import org.kud.roleplay.command.roleplay.experience.ExperienceLeaderboardCommand
 import org.kud.roleplay.command.roleplay.experience.ExperienceShowCommand
 import org.kud.roleplay.command.test.TestCommand
@@ -27,24 +29,29 @@ import org.kud.roleplay.command.test.TestCommand
  */
 
 internal fun RoleplayBot.buildCommands(instance: RoleplayBot) = CommandService(instance) {
-    register("exit", ExitCommand())
-    register("test", TestCommand())
+    register("stop", ExitCommand)
+    register("test", TestCommand)
 
     register("music") {
-        register("start", MusicStartCommand("https://www.youtube.com/watch?v=zJvhDfYU_LU"))
-        register("stop", MusicStopCommand())
+        register("start", MusicStartCommand)
+        register("stop", MusicStopCommand)
     }
 
     register("chara") {
-        register("create", CharaCreateCommand())
-        register("delete", CharaDeleteCommand())
-        register("update", CharaUpdateCommand())
-        register("list", CharaListCommand())
-        register("info", CharaInfoCommand())
+        register("create", CharaCreateCommand)
+        register("delete", CharaDeleteCommand)
+        register("update", CharaUpdateCommand)
+        register("list", CharaListCommand)
+        register("info", CharaInfoCommand)
+        register("select", CharaSelectCommand)
     }
 
-    register("exp", ExperienceShowCommand())
-    register("top", ExperienceLeaderboardCommand())
+    register("battle") {
+        register("start", CombatStartCommand)
+    }
+
+    register("exp", ExperienceShowCommand)
+    register("top", ExperienceLeaderboardCommand)
 }
 
 internal fun RoleplayBot.getRecommendedShardCount() =

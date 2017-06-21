@@ -22,7 +22,7 @@ class Database(config: Config) {
         })
 
         transaction {
-            create(Guilds, Users, Characters)
+            create(Guilds, Users, Characters, Items)
         }
     }
 

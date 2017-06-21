@@ -21,7 +21,7 @@ class Guild(id: EntityID<Long>) : LongEntity(id) {
 
         fun equals(guildId: Long) = (Guilds.id eq guildId)
 
-        fun exists(guildId: Long) = Guilds.select(equals(guildId)).count() > 0
+        fun exists(guildId: Long) = transaction { Guilds.select(Guild.equals(guildId)).count() > 0 }
 
         fun getOrInit(guildId: Long) = transaction {
             Guild.find { Guild.equals(guildId) }.let {
@@ -38,5 +38,5 @@ class Guild(id: EntityID<Long>) : LongEntity(id) {
 
     var roleplayRoleId by Guilds.roleplayRoleId
 
-    infix operator fun compareTo(other: Guild) = id.value.compareTo(other.id.value)
+    operator fun compareTo(other: Guild) = id.value.compareTo(other.id.value)
 }
