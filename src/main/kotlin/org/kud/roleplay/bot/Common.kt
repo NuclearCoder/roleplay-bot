@@ -20,6 +20,7 @@ import org.kud.roleplay.command.roleplay.characters.CharaListCommand
 import org.kud.roleplay.command.roleplay.characters.CharaSelectCommand
 import org.kud.roleplay.command.roleplay.characters.CharaUpdateCommand
 import org.kud.roleplay.command.roleplay.combat.CombatStartCommand
+import org.kud.roleplay.command.roleplay.combat.CombatStopCommand
 import org.kud.roleplay.command.roleplay.experience.ExperienceLeaderboardCommand
 import org.kud.roleplay.command.roleplay.experience.ExperienceShowCommand
 import org.kud.roleplay.command.test.TestCommand
@@ -29,29 +30,30 @@ import org.kud.roleplay.command.test.TestCommand
  */
 
 internal fun RoleplayBot.buildCommands(instance: RoleplayBot) = CommandService(instance) {
-    register("stop", ExitCommand)
-    register("test", TestCommand)
+    it["stop"] = ExitCommand
+    it["test"] = TestCommand
 
-    register("music") {
-        register("start", MusicStartCommand)
-        register("stop", MusicStopCommand)
+    it("music") {
+        it["start"] = MusicStartCommand
+        it["stop"] = MusicStopCommand
     }
 
-    register("chara") {
-        register("create", CharaCreateCommand)
-        register("delete", CharaDeleteCommand)
-        register("update", CharaUpdateCommand)
-        register("list", CharaListCommand)
-        register("info", CharaInfoCommand)
-        register("select", CharaSelectCommand)
+    it("chara") {
+        it["create"] = CharaCreateCommand
+        it["delete"] = CharaDeleteCommand
+        it["update"] = CharaUpdateCommand
+        it["list"] = CharaListCommand
+        it["info"] = CharaInfoCommand
+        it["select"] = CharaSelectCommand
     }
 
-    register("battle") {
-        register("start", CombatStartCommand)
+    it("battle") {
+        it["start"] = CombatStartCommand
+        it["stop"] = CombatStopCommand
     }
 
-    register("exp", ExperienceShowCommand)
-    register("top", ExperienceLeaderboardCommand)
+    it["exp"] = ExperienceShowCommand
+    it["top"] = ExperienceLeaderboardCommand
 }
 
 internal fun RoleplayBot.getRecommendedShardCount() =

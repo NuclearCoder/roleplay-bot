@@ -1,4 +1,4 @@
-package org.kud.roleplay.roleplay.combat
+package org.kud.roleplay.roleplay.combat.battle
 
 import org.kud.roleplay.database.Character
 import org.kud.roleplay.util.OrderedPair
@@ -11,10 +11,18 @@ abstract class AbstractBattleManager {
      * Starts a battle (if none is already started) and returns the AbstractBattle object
      */
     fun startBattle(first: Character, second: Character): AbstractBattle? {
-        val pair = OrderedPair(first, second)
-        return if (areFighting(pair)) null else {
-            battles.put(pair, newBattleWith(pair))
+        OrderedPair(first, second).let { pair ->
+            return if (areFighting(pair)) null else {
+                battles.put(pair, newBattleWith(pair))
+            }
         }
+    }
+
+    /**
+     * Stops a battle, silently.
+     */
+    fun stopBattle(first: Character, second: Character) {
+        battles.remove(OrderedPair(first, second))
     }
 
     /**
@@ -23,7 +31,6 @@ abstract class AbstractBattleManager {
     fun areFighting(first: Character, second: Character) = areFighting(OrderedPair(first, second))
 
     fun areFighting(pair: OrderedPair<Character>) = battles.containsKey(pair)
-
 
     abstract fun newBattleWith(pair: OrderedPair<Character>): AbstractBattle
 

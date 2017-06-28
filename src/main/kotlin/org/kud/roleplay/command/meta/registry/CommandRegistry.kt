@@ -10,7 +10,7 @@ class CommandRegistry private constructor(builder: RegistryBuilder) {
         put("", RegisteredCommand.Final("", fallback))
     }
 
-    constructor(builder: RegistryBuilder.() -> Unit)
+    constructor(builder: (RegistryBuilder) -> Unit)
             : this(RegistryBuilder().apply(builder))
 
     fun search(name: String): RegisteredCommand? =
@@ -40,11 +40,14 @@ class CommandRegistry private constructor(builder: RegistryBuilder) {
         }
 
         // register branch command with a default behaviour
-        fun register(name: String, subBuilder: RegistryBuilder.() -> Unit) {
-            commands[name] = CommandRegistry(subBuilder).let {
+        fun register(name: String, builder: (RegistryBuilder) -> Unit) {
+            commands[name] = CommandRegistry(builder).let {
                 RegisteredCommand.Branch(name, it.fallback, it)
             }
         }
+
+        operator fun set(name: String, command: Command) = register(name, command)
+        operator fun invoke(name: String, builder: (RegistryBuilder) -> Unit) = register(name, builder)
 
     }
 

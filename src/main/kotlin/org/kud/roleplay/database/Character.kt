@@ -37,19 +37,19 @@ object Characters : IntIdTable(name = "characters") {
 
     // item slots
 
-    val weapon1 = reference("weapon1", Items)
-    val weapon2 = reference("weapon2", Items)
-    val weapon3 = reference("weapon3", Items)
-    val weapon4 = reference("weapon4", Items)
-    val shield = reference("shield", Items)
-    val helmet = reference("helmet", Items)
-    val chestplate = reference("chestplate", Items)
-    val leggings = reference("leggings", Items)
-    val boots = reference("boots", Items)
-    val amulet = reference("amulet", Items)
-    val ring = reference("ring", Items)
-    val consumable1 = reference("consumable1", Items)
-    val consumable2 = reference("consumable2", Items)
+    val weapon1 = reference("weapon1", Items).default(Item.nothing)
+    val weapon2 = reference("weapon2", Items).default(Item.nothing)
+    val weapon3 = reference("weapon3", Items).default(Item.nothing)
+    val weapon4 = reference("weapon4", Items).default(Item.nothing)
+    val shield = reference("shield", Items).default(Item.nothing)
+    val helmet = reference("helmet", Items).default(Item.nothing)
+    val chestplate = reference("chestplate", Items).default(Item.nothing)
+    val leggings = reference("leggings", Items).default(Item.nothing)
+    val boots = reference("boots", Items).default(Item.nothing)
+    val amulet = reference("amulet", Items).default(Item.nothing)
+    val ring = reference("ring", Items).default(Item.nothing)
+    val consumable1 = reference("consumable1", Items).default(Item.nothing)
+    val consumable2 = reference("consumable2", Items).default(Item.nothing)
 }
 
 class Character(id: EntityID<Int>) : IntEntity(id), Comparable<Character> {
@@ -74,6 +74,12 @@ class Character(id: EntityID<Int>) : IntEntity(id), Comparable<Character> {
                 }
             }
 
+    override fun equals(other: Any?) = when (other) {
+        is Character -> guildId == other.guildId && userId == other.userId && name == other.name
+        else -> super.equals(other)
+    }
+
+    override fun hashCode() = 31 * (31 * (31 * name.hashCode() + userId.hashCode()) + guildId.hashCode())
 
     var guildId by Characters.guildId
     var userId by Characters.userId

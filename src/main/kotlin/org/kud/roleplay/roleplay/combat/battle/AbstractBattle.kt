@@ -1,4 +1,4 @@
-package org.kud.roleplay.roleplay.combat
+package org.kud.roleplay.roleplay.combat.battle
 
 import org.kud.roleplay.database.Character
 import org.kud.roleplay.util.OrderedPair

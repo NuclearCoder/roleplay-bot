@@ -11,6 +11,9 @@ class OrderedPair<T : Comparable<T>>(first: T, second: T) {
         this.second = if (lesser) second else first
     }
 
+    operator fun component1() = first
+    operator fun component2() = second
+
     override fun equals(other: Any?) = when (other) {
         is OrderedPair<*> -> first == other.first && second == other.second
         else -> super.equals(other)

@@ -4,7 +4,7 @@ import org.kud.roleplay.command.meta.CommandContext
 import org.kud.roleplay.command.meta.command.Command
 import org.kud.roleplay.database.getActiveCharacter
 
-object CombatStartCommand : Command() {
+object CombatStopCommand : Command() {
 
     override fun onInvoke(context: CommandContext) {
         if (context.tokenizer.hasMore) {
@@ -15,12 +15,12 @@ object CombatStartCommand : Command() {
                     val second = opponent.getActiveCharacter(context.event.guild.idLong)
                     if (second != null) {
                         // TODO: confirm
-                        if (!context.bot.battles.areFighting(first, second)) {
-                            context.bot.battles.startBattle(first, second)
+                        if (context.bot.battles.areFighting(first, second)) {
+                            context.bot.battles.stopBattle(first, second)
 
-                            context.reply("a battle has started between your characters.")
+                            context.reply("the battle between your characters has been stopped.")
                         } else {
-                            context.replyFail("there is already an ongoing battle between your characters.")
+                            context.replyFail("there is no ongoing battle between your characters.")
                         }
                     } else {
                         context.replyFail("your opponent has no active character.")

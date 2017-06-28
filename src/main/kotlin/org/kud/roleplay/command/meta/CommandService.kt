@@ -13,7 +13,7 @@ import org.kud.roleplay.util.MessageTokenizer
 import org.kud.roleplay.util.hasSufficientPermissions
 
 class CommandService(private val bot: RoleplayBot,
-                     commandBuilder: CommandRegistry.RegistryBuilder.() -> Unit) {
+                     commandBuilder: (CommandRegistry.RegistryBuilder) -> Unit) {
 
     companion object {
         /*const val cmdPref = "-"

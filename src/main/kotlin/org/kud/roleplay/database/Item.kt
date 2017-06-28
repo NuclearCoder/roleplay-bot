@@ -4,6 +4,7 @@ import org.jetbrains.exposed.dao.EntityID
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.IntIdTable
+import org.jetbrains.exposed.sql.insertIgnore
 
 /**
  * Created by NuclearCoder on 21/06/17.
@@ -16,29 +17,35 @@ object Items : IntIdTable(name = "items") {
         AMULET, RING, CONSUMABLE
     }
 
-    val type = enumeration("type", ItemType::class.java) // indexed from 0, corresponds to each ItemType
-    val tier = integer("tier")
-    val name = varchar("name", 50)
+    val type = enumeration("type", ItemType::class.java).default(ItemType.CONSUMABLE) // indexed from 0, corresponds to each ItemType
+    val tier = integer("tier").default(0)
+    val name = varchar("name", 50).default("")
 
-    val price = integer("price")
+    val price = integer("price").default(0)
 
     // stats
 
-    val health = integer("health")
-    val mana = integer("mana")
-    val stamina = integer("stamina")
-    val strength = integer("strength")
-    val magic = integer("magic")
-    val defense = integer("defense")
-    val resistance = integer("resistance")
-    val speed = integer("speed")
-    val accuracy = integer("accuracy")
-    val skill = integer("skill")
+    val health = integer("health").default(0)
+    val mana = integer("mana").default(0)
+    val stamina = integer("stamina").default(0)
+    val strength = integer("strength").default(0)
+    val magic = integer("magic").default(0)
+    val defense = integer("defense").default(0)
+    val resistance = integer("resistance").default(0)
+    val speed = integer("speed").default(0)
+    val accuracy = integer("accuracy").default(0)
+    val skill = integer("skill").default(0)
 
 }
 
 class Item(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<Item>(Items)
+    companion object : IntEntityClass<Item>(Items) {
+        val nothing = EntityID(-1, Items)
+
+        init {
+            Items.insertIgnore { it[Items.id] = nothing }
+        }
+    }
 
     val type by Items.type
     val tier by Items.tier
