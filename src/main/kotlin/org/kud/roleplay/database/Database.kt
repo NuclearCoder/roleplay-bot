@@ -7,9 +7,9 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.kud.roleplay.util.Config
 
 
-class Database(config: Config) {
+object Database {
 
-    init {
+    fun load(config: Config) {
         Database.connect(MysqlDataSource().apply {
             serverName = config["database_host"]
             port = config["database_port"].toInt()

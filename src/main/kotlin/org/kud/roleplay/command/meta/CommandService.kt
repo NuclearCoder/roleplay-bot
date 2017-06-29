@@ -28,7 +28,6 @@ class CommandService(private val bot: RoleplayBot,
     private val owner get(): User = _owner ?: throw UninitializedPropertyAccessException("Owner has not been set")
 
     private val registry = CommandRegistry(commandBuilder)
-    private val messageHandler = MessageHandler()
 
     @SubscribeEvent
     fun onReady(event: ReadyEvent) {
@@ -72,7 +71,7 @@ class CommandService(private val bot: RoleplayBot,
             if (tokenizer.skip(prefix)) { // is a command
                 processCommand(event, tokenizer, tokenizer.nextWord(), registry)
             } else { // is a message
-                messageHandler.processMessage(event)
+                MessageHandler.processMessage(event)
             }
         }
     }

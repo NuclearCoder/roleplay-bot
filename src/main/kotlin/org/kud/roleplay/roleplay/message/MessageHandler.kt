@@ -7,9 +7,7 @@ import org.kud.roleplay.database.User
 import org.kud.roleplay.database.Users
 import org.kud.roleplay.roleplay.experience.ExperienceCalculator
 
-class MessageHandler {
-
-    private val expCalculator = ExperienceCalculator()
+object MessageHandler {
 
     fun processMessage(event: MessageReceivedEvent) {
         if (event.author.isBot) return
@@ -21,7 +19,7 @@ class MessageHandler {
 
         val user = User.getOrInit(guildId, userId)
 
-        val rawGain = expCalculator.calculate(message.content)
+        val rawGain = ExperienceCalculator.calculate(message.content)
         val actualGain = (user.experienceMultiplier.toDouble() * rawGain).toLong()
 
         transaction {

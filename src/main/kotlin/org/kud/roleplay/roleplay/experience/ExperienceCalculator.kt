@@ -1,6 +1,6 @@
 package org.kud.roleplay.roleplay.experience
 
-class ExperienceCalculator {
+object ExperienceCalculator {
 
     //TODO highly work-in-progress, needs a lot of tweaking and mostly trial-and-error
 
@@ -19,20 +19,16 @@ class ExperienceCalculator {
 
      */
 
-    companion object {
+    const val maxGain = 100
 
-        const val maxGain = 100
+    const val wLength = 0.7
+    const val wTypography = 0.3
 
-        const val wLength = 0.7
-        const val wTypography = 0.3
+    const val lengthMaxGain = wLength * maxGain
+    const val lengthHalfLength = 100
+    const val lengthCharacLength = lengthHalfLength / 0.693147180559945309  // the literal constant here is ln(2)
 
-        const val lengthMaxGain = wLength * maxGain
-        const val lengthHalfLength = 100
-        const val lengthCharacLength = lengthHalfLength / 0.693147180559945309  // the literal constant here is ln(2)
-
-        const val typoMaxGain = wTypography * maxGain
-
-    }
+    const val typoMaxGain = wTypography * maxGain
 
     /**
      * f(n) = M * (1 - exp(-n / T))
