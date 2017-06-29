@@ -69,7 +69,9 @@ class CommandService(private val bot: RoleplayBot,
         val tokenizer = MessageTokenizer(event.message.rawContent)
         if (tokenizer.hasMore) {
             if (tokenizer.skip(prefix)) { // is a command
-                processCommand(event, tokenizer, tokenizer.nextWord(), registry)
+                tokenizer.nextWord().takeIf(String::isNotEmpty)?.let { name ->
+                    processCommand(event, tokenizer, name, registry)
+                }
             } else { // is a message
                 MessageHandler.processMessage(event)
             }

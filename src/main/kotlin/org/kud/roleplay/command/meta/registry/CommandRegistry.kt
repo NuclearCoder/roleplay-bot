@@ -1,33 +1,23 @@
 package org.kud.roleplay.command.meta.registry
 
+import org.apache.commons.collections4.trie.PatriciaTrie
 import org.kud.roleplay.command.meta.CommandContext
 import org.kud.roleplay.command.meta.command.Command
 
 class CommandRegistry private constructor(builder: RegistryBuilder) {
 
     val fallback = builder.fallback ?: FallbackCommand()
-    val commands = builder.commands.apply {
-        put("", RegisteredCommand.Final("", fallback))
-    }
+    val commands = builder.commands.also { it[""] = RegisteredCommand.Final("", fallback) }
 
     constructor(builder: (RegistryBuilder) -> Unit)
             : this(RegistryBuilder().apply(builder))
 
-    fun search(name: String): RegisteredCommand? =
-            commands.tailMap(name).let {
-                // prefix lookup in sorted map
-                tail ->
-                if (!tail.isEmpty()) {
-                    tail.firstKey().let {
-                        if (it.startsWith(name)) tail[it] else null
-                    }
-                } else null
-            }
+    fun search(name: String): RegisteredCommand? = commands.selectValue(name)
 
     class RegistryBuilder internal constructor() {
 
         internal var fallback: Command? = null
-        internal val commands = sortedMapOf<String, RegisteredCommand>()
+        internal val commands = PatriciaTrie<RegisteredCommand>()
 
         // set fallback command
         fun fallback(command: Command?) {
