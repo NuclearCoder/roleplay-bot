@@ -8,10 +8,6 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
-/**
- * Created by NuclearCoder on 5/19/2017.
- */
-
 object Guilds : LongIdTable(name = "guilds") {
     val roleplayRoleId = long("rp_role").default(0)
 }

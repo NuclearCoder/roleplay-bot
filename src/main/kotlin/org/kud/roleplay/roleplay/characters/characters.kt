@@ -4,10 +4,6 @@ import org.kud.roleplay.database.Character
 import org.kud.roleplay.database.Item
 import kotlin.reflect.KProperty1
 
-/**
- * Created by NuclearCoder on 21/06/17.
- */
-
 private val itemFields = listOf(
         Character::weapon1, Character::weapon2, Character::weapon3, Character::weapon4,
         Character::shield,

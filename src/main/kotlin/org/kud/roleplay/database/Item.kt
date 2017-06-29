@@ -6,10 +6,6 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.IntIdTable
 import org.jetbrains.exposed.sql.insertIgnore
 
-/**
- * Created by NuclearCoder on 21/06/17.
- */
-
 object Items : IntIdTable(name = "items") {
     enum class ItemType {
         PHYSICAL_WEAPON, SHIELD, MAGICAL_WEAPON,

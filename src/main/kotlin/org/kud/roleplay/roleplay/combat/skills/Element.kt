@@ -1,9 +1,5 @@
 package org.kud.roleplay.roleplay.combat.skills
 
-/**
- * Created by NuclearCoder on 2017-06-22.
- */
-
 enum class Element {
     FIRE, WATER, AIR, EARTH, LIGHT, DARK;
 

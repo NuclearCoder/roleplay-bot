@@ -10,6 +10,7 @@ abstract class RoleplayBotBase(override final val config: Config) : RoleplayBot 
     init {
         Database.load(config)
     }
+
     override final val audio = BotAudioState()
     override final val battles = GridBattleManager()
 

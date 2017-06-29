@@ -15,10 +15,6 @@ import org.kud.roleplay.command.meta.CommandContext
 import org.kud.roleplay.roleplay.experience.getLevelFor
 import java.math.BigDecimal
 
-/**
- * Created by NuclearCoder on 5/19/2017.
- */
-
 object Users : IntIdTable(name = "users") {
     val guildId = long("id_guild")
     val userId = long("id_user")

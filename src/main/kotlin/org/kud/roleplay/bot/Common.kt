@@ -25,10 +25,6 @@ import org.kud.roleplay.command.roleplay.experience.ExperienceLeaderboardCommand
 import org.kud.roleplay.command.roleplay.experience.ExperienceShowCommand
 import org.kud.roleplay.command.test.TestCommand
 
-/**
- * Created by NuclearCoder on 5/20/2017.
- */
-
 internal fun RoleplayBot.buildCommands(instance: RoleplayBot) = CommandService(instance) {
     it["stop"] = ExitCommand
     it["test"] = TestCommand

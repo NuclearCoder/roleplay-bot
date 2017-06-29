@@ -11,10 +11,6 @@ import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
-/**
- * Created by NuclearCoder on 5/18/2017.
- */
-
 object Characters : IntIdTable(name = "characters") {
     val guildId = long("id_guild")
     val userId = long("id_user")
