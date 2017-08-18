@@ -1,4 +1,4 @@
-package nuke.roleplaybot.roleplay.combat.battle
+package nuke.roleplaybot.roleplay.battle
 
 import nuke.roleplaybot.database.Character
 import nuke.roleplaybot.util.OrderedPair

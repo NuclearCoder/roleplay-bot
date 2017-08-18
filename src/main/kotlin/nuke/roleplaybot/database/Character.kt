@@ -33,19 +33,19 @@ object Characters : IntIdTable(name = "characters") {
 
     // item slots
 
-    val weapon1 = reference("weapon1", Items).default(Item.nothing)
-    val weapon2 = reference("weapon2", Items).default(Item.nothing)
-    val weapon3 = reference("weapon3", Items).default(Item.nothing)
-    val weapon4 = reference("weapon4", Items).default(Item.nothing)
-    val shield = reference("shield", Items).default(Item.nothing)
-    val helmet = reference("helmet", Items).default(Item.nothing)
-    val chestplate = reference("chestplate", Items).default(Item.nothing)
-    val leggings = reference("leggings", Items).default(Item.nothing)
-    val boots = reference("boots", Items).default(Item.nothing)
-    val amulet = reference("amulet", Items).default(Item.nothing)
-    val ring = reference("ring", Items).default(Item.nothing)
-    val consumable1 = reference("consumable1", Items).default(Item.nothing)
-    val consumable2 = reference("consumable2", Items).default(Item.nothing)
+    val weapon1 = reference("weapon1", Items).nullable()
+    val weapon2 = reference("weapon2", Items).nullable()
+    val weapon3 = reference("weapon3", Items).nullable()
+    val weapon4 = reference("weapon4", Items).nullable()
+    val shield = reference("shield", Items).nullable()
+    val helmet = reference("helmet", Items).nullable()
+    val chestplate = reference("chestplate", Items).nullable()
+    val leggings = reference("leggings", Items).nullable()
+    val boots = reference("boots", Items).nullable()
+    val amulet = reference("amulet", Items).nullable()
+    val ring = reference("ring", Items).nullable()
+    val consumable1 = reference("consumable1", Items).nullable()
+    val consumable2 = reference("consumable2", Items).nullable()
 }
 
 class Character(id: EntityID<Int>) : IntEntity(id), Comparable<Character> {
@@ -94,19 +94,19 @@ class Character(id: EntityID<Int>) : IntEntity(id), Comparable<Character> {
     var statAccuracy by Characters.accuracy
     var statSkill by Characters.skill
 
-    var weapon1 by Item referencedOn Characters.weapon1
-    var weapon2 by Item referencedOn Characters.weapon2
-    var weapon3 by Item referencedOn Characters.weapon3
-    var weapon4 by Item referencedOn Characters.weapon4
-    var shield by Item referencedOn Characters.shield
-    var helmet by Item referencedOn Characters.helmet
-    var chestplate by Item referencedOn Characters.chestplate
-    var leggings by Item referencedOn Characters.leggings
-    var boots by Item referencedOn Characters.boots
-    var amulet by Item referencedOn Characters.amulet
-    var ring by Item referencedOn Characters.ring
-    var consumable1 by Item referencedOn Characters.consumable1
-    var consumable2 by Item referencedOn Characters.consumable2
+    var weapon1 by Item optionalReferencedOn Characters.weapon1
+    var weapon2 by Item optionalReferencedOn Characters.weapon2
+    var weapon3 by Item optionalReferencedOn Characters.weapon3
+    var weapon4 by Item optionalReferencedOn Characters.weapon4
+    var shield by Item optionalReferencedOn Characters.shield
+    var helmet by Item optionalReferencedOn Characters.helmet
+    var chestplate by Item optionalReferencedOn Characters.chestplate
+    var leggings by Item optionalReferencedOn Characters.leggings
+    var boots by Item optionalReferencedOn Characters.boots
+    var amulet by Item optionalReferencedOn Characters.amulet
+    var ring by Item optionalReferencedOn Characters.ring
+    var consumable1 by Item optionalReferencedOn Characters.consumable1
+    var consumable2 by Item optionalReferencedOn Characters.consumable2
 
 
 }

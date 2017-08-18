@@ -4,10 +4,10 @@ import org.jetbrains.exposed.dao.EntityID
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.IntIdTable
-import org.jetbrains.exposed.sql.insertIgnore
 
 object Items : IntIdTable(name = "items") {
     enum class ItemType {
+        WEAPON, // <-- generic type -- should not be used in item registry
         PHYSICAL_WEAPON, SHIELD, MAGICAL_WEAPON,
         HELMET, CHESTPLATE, LEGGINGS, BOOTS,
         AMULET, RING, CONSUMABLE
@@ -35,13 +35,7 @@ object Items : IntIdTable(name = "items") {
 }
 
 class Item(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<Item>(Items) {
-        val nothing = EntityID(-1, Items)
-
-        init {
-            Items.insertIgnore { it[Items.id] = nothing }
-        }
-    }
+    companion object : IntEntityClass<Item>(Items)
 
     val type by Items.type
     val tier by Items.tier

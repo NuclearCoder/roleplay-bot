@@ -1,5 +1,8 @@
 package nuke.roleplaybot.util
 
+import nuke.roleplaybot.database.Items
+import org.w3c.dom.NodeList
+
 fun stringFromTime(time: Int): String {
     val sec = time % 60
     val minTime = time / 60
@@ -64,4 +67,21 @@ inline fun <T : AutoCloseable?, R> T.use(block: (T) -> R): R {
             this?.close()
         }
     }
+}
+
+inline fun <R> ignore(crossinline block: () -> R) =
+    try {
+        block()
+    } catch (ignored: Exception) {
+        null
+    }
+
+fun NodeList.toIterable() = (0 until length).map(this::item)
+
+fun <T> T?.notNull(message: String = "Receiver is null"): T = this ?: error(message)
+
+fun String.toItemType(): Items.ItemType? = try {
+    Items.ItemType.valueOf(this)
+} catch (e: IllegalArgumentException) {
+    null
 }

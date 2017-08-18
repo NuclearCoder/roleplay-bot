@@ -13,8 +13,8 @@ private val itemFields = listOf(
 )
 
 // equivalent to `weapon1.prop + weapon2.prop + ...`
-fun Character.totalItemBonusFor(property: KProperty1<Item, Int>) =
-        itemFields.map { item -> property(item(this)) }.sum()
+private fun Character.totalItemBonusFor(property: KProperty1<Item, Int>) =
+        itemFields.map { item -> item.get(this)?.let(property) ?: 0 }.sum()
 
 val Character.health get() = statHealth + totalItemBonusFor(Item::health)
 val Character.mana get() = statMana + totalItemBonusFor(Item::mana)

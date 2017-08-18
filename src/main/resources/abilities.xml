@@ -1,0 +1,28 @@
+<abilities>
+    <ability id="dual-wield">
+        <name>Dual Wield</name>
+        <passive>
+            <slot type="WEAPON" />
+        </passive>
+    </ability>
+    <ability id="bm-capacity">
+        <name>Blade Magic Capacity</name>
+        <passive>
+            <slot type="WEAPON" />
+            <slot type="WEAPON" />
+        </passive>
+    </ability>
+    <ability id="bm-strike">
+        <name>Blade Magic Strike</name>
+        <active>
+            <throw range="4" />
+        </active>
+    </ability>
+    <ability id="shield-bash">
+        <name>Shield Bash</name>
+        <active>
+            <throwre range="1" />
+            <status type="STUN" chance="15" />
+        </active>
+    </ability>
+</abilities>

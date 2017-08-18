@@ -21,7 +21,8 @@ object Database {
         })
 
         transaction {
-            create(Guilds, Users, Characters, Items)
+            create (Items) // that first
+            create (Guilds, Users, Characters)
         }
     }
 

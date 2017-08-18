@@ -1,4 +1,4 @@
-package nuke.roleplaybot.roleplay.combat.skills
+package nuke.roleplaybot.roleplay.abilities
 
 enum class Element {
     FIRE, WATER, AIR, EARTH, LIGHT, DARK;
