@@ -17,8 +17,6 @@ object CombatStopCommand : Command() {
                         // TODO: confirm
                         if (context.bot.battles.areFighting(first, second)) {
                             context.bot.battles.stopBattle(first, second)
-
-                            context.reply("the battle between your characters has been stopped.")
                         } else {
                             context.replyFail("there is no ongoing battle between your characters.")
                         }

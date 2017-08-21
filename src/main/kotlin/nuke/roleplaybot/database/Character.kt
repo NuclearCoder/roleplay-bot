@@ -108,5 +108,4 @@ class Character(id: EntityID<Int>) : IntEntity(id), Comparable<Character> {
     var consumable1 by Item optionalReferencedOn Characters.consumable1
     var consumable2 by Item optionalReferencedOn Characters.consumable2
 
-
 }

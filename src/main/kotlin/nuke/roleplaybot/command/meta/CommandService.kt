@@ -1,7 +1,5 @@
 package nuke.roleplaybot.command.meta
 
-import net.dv8tion.jda.core.entities.User
-import net.dv8tion.jda.core.events.ReadyEvent
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import net.dv8tion.jda.core.hooks.SubscribeEvent
 import nuke.roleplaybot.bot.RoleplayBot
@@ -16,33 +14,14 @@ class CommandService(private val bot: RoleplayBot,
                      commandBuilder: (CommandRegistry.RegistryBuilder) -> Unit) {
 
     companion object {
-        /*const val cmdPref = "-"
-        const val rootCmd = "rp"
-
-        const val prefix = cmdPref + rootCmd*/
-
         const val prefix = "rp!"
     }
 
-    private var _owner: User? = null
-    private val owner get(): User = _owner ?: throw UninitializedPropertyAccessException("Owner has not been set")
+    private val owner by lazy {
+        bot.client.asBot().applicationInfo.complete().owner
+    }
 
     private val registry = CommandRegistry(commandBuilder)
-
-    @SubscribeEvent
-    fun onReady(event: ReadyEvent) {
-        bot.client.asBot().applicationInfo.queue {
-            _owner = it.owner
-        }
-
-        // block until owner is set
-        while (_owner == null) {
-            try {
-                Thread.sleep(100)
-            } catch (ignored: InterruptedException) {
-            }
-        }
-    }
 
     private tailrec fun processCommand(event: MessageReceivedEvent, tokenizer: MessageTokenizer,
                                        name: String, registry: CommandRegistry) {

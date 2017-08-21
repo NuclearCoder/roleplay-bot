@@ -1,7 +1,6 @@
 package nuke.roleplaybot.bot.basic
 
 import nuke.roleplaybot.LOGGER
-import nuke.roleplaybot.SHUTDOWN_WAIT
 import nuke.roleplaybot.bot.RoleplayBotBase
 import nuke.roleplaybot.bot.buildClient
 import nuke.roleplaybot.bot.buildCommands
@@ -16,14 +15,6 @@ class RoleplayBotBasic(config: Config) : RoleplayBotBase(config) {
     override val client = buildClient()
 
     override fun terminate() {
-        LOGGER.info("Waiting for last requests...")
-
-        try {
-            //wait for requests for an arbitrary time
-            Thread.sleep(SHUTDOWN_WAIT)
-        } catch (ignored: InterruptedException) {
-        }
-
         LOGGER.info("Shutting down...")
 
         client.shutdown()

@@ -3,12 +3,10 @@ package nuke.roleplaybot.bot
 import club.minnced.kjda.client
 import club.minnced.kjda.plusAssign
 import club.minnced.kjda.token
-import com.mashape.unirest.http.Unirest
 import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.hooks.AnnotatedEventManager
-import net.dv8tion.jda.core.requests.Requester
 import nuke.roleplaybot.command.admin.ExitCommand
 import nuke.roleplaybot.command.meta.CommandService
 import nuke.roleplaybot.command.music.MusicStartCommand
@@ -52,11 +50,12 @@ internal fun RoleplayBot.buildCommands(instance: RoleplayBot) = CommandService(i
     it["top"] = ExperienceLeaderboardCommand
 }
 
-internal fun RoleplayBot.getRecommendedShardCount() =
+internal fun RoleplayBot.getRecommendedShardCount() = 2
+/*internal fun RoleplayBot.getRecommendedShardCount() =
         Unirest.get(Requester.DISCORD_API_PREFIX + "gateway/bot")
                 .header("Authorization", "Bot ${config["token"]}")
                 .header("User-agent", Requester.USER_AGENT)
-                .asJson().body.`object`.getInt("shards")
+                .asJson().body.`object`.getInt("shards")*/
 
 internal fun RoleplayBot.buildClient(preInit: JDABuilder.() -> Unit = {}): JDA = client(AccountType.BOT) {
     token { config["token"] }

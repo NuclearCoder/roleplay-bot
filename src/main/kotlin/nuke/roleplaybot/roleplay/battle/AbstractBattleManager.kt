@@ -1,5 +1,6 @@
 package nuke.roleplaybot.roleplay.battle
 
+import net.dv8tion.jda.core.entities.TextChannel
 import nuke.roleplaybot.database.Character
 import nuke.roleplaybot.util.OrderedPair
 
@@ -10,10 +11,13 @@ abstract class AbstractBattleManager {
     /**
      * Starts a battle (if none is already started) and returns the AbstractBattle object
      */
-    fun startBattle(first: Character, second: Character): AbstractBattle? {
+    fun startBattle(channel: TextChannel, first: Character, second: Character): AbstractBattle? {
         OrderedPair(first, second).let { pair ->
             return if (areFighting(pair)) null else {
-                battles.put(pair, newBattleWith(pair))
+                newBattleWith(channel, pair).also { battle ->
+                    battles.put(pair, battle)
+                    battle.start()
+                }
             }
         }
     }
@@ -22,7 +26,11 @@ abstract class AbstractBattleManager {
      * Stops a battle, silently.
      */
     fun stopBattle(first: Character, second: Character) {
-        battles.remove(OrderedPair(first, second))
+        OrderedPair(first, second).let { pair ->
+            if (areFighting(pair)) {
+                battles.remove(pair)?.stop()
+            }
+        }
     }
 
     /**
@@ -32,7 +40,7 @@ abstract class AbstractBattleManager {
 
     fun areFighting(pair: OrderedPair<Character>) = battles.containsKey(pair)
 
-    abstract fun newBattleWith(pair: OrderedPair<Character>): AbstractBattle
+    abstract fun newBattleWith(channel: TextChannel, pair: OrderedPair<Character>): AbstractBattle
 
 
 }

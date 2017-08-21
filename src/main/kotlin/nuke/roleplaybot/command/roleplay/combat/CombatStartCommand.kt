@@ -16,11 +16,12 @@ object CombatStartCommand : Command() {
                     if (second != null) {
                         // TODO: confirm
                         if (!context.bot.battles.areFighting(first, second)) {
-                            context.bot.battles.startBattle(first, second)
-
-                            context.reply("a battle has started between your characters.")
+                            context.bot.battles.startBattle(context.event.textChannel, first, second)
                         } else {
                             context.replyFail("there is already an ongoing battle between your characters.")
+                            context.reply {
+
+                            }
                         }
                     } else {
                         context.replyFail("your opponent has no active character.")
