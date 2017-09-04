@@ -7,7 +7,7 @@ import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.entities.MessageChannel
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import net.dv8tion.jda.core.hooks.SubscribeEvent
-import nuke.roleplaybot.util.ReactionMenu
+import nuke.roleplaybot.util.discord.ReactionMenu
 
 val REPLY_SUCCESS = ":white_check_mark:"
 val REPLY_FAILURE = ":negative_squared_cross_mark:"

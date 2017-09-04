@@ -1,4 +1,4 @@
-package nuke.roleplaybot.util
+package nuke.roleplaybot.util.discord
 
 import com.vdurmont.emoji.EmojiParser
 import net.dv8tion.jda.core.entities.Member
@@ -7,17 +7,15 @@ import net.dv8tion.jda.core.entities.MessageReaction
 import net.dv8tion.jda.core.events.message.react.GenericMessageReactionEvent
 import net.dv8tion.jda.core.hooks.SubscribeEvent
 
-typealias Callback = ReactionMenu.(Member) -> Unit
-
-class ReactionMenu(val message: Message, val choices: Map<String, Callback>,
+class ReactionMenu(val message: Message, val choices: Map<String, RMCallback>,
                    val target: Member?) {
 
     class Builder(private val message: Message, target: Member? = null) {
 
-        private val choices = mutableMapOf<String, Callback>()
+        private val choices = mutableMapOf<String, RMCallback>()
         private val menu = ReactionMenu(message, choices, target)
 
-        fun choice(emoteName: String, callback: Callback) {
+        fun choice(emoteName: String, callback: RMCallback) {
             EmojiParser.parseToUnicode(":$emoteName:").let { emoteUnicode ->
                 choices["u$emoteUnicode"] = callback
                 message.addReaction(emoteUnicode).queue()

@@ -1,7 +1,7 @@
 package nuke.roleplaybot.roleplay.abilities.trait
 
 import nuke.roleplaybot.database.Items.ItemType
-import nuke.roleplaybot.roleplay.abilities.Status.StatusType
+import nuke.roleplaybot.roleplay.abilities.StatusType
 
 sealed class Trait {
 

@@ -1,7 +1,7 @@
 package nuke.roleplaybot.command.meta.command
 
 import nuke.roleplaybot.command.meta.CommandContext
-import nuke.roleplaybot.util.hasSufficientPermissions
+import nuke.roleplaybot.util.discord.hasSufficientPermissions
 
 abstract class Command(val requiredPermission: PermissionLevel = PermissionLevel.User) {
 

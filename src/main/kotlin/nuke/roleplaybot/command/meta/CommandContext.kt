@@ -7,7 +7,7 @@ import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.entities.User
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import nuke.roleplaybot.bot.RoleplayBot
-import nuke.roleplaybot.util.MessageTokenizer
+import nuke.roleplaybot.util.discord.MessageTokenizer
 
 class CommandContext(val event: MessageReceivedEvent,
                      val bot: RoleplayBot,

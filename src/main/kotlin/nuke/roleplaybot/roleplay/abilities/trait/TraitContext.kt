@@ -10,7 +10,7 @@ class TraitContext(val node: Node, val isActive: Boolean) {
         if (!condition) error(message)
     }
     inline fun require(message: String = "Predicate is false.", predicate: TraitContext.() -> Boolean) {
-        require(predicate())
+        require(message, predicate())
     }
     fun requireActive() = require("This trait can only be active.", isActive)
     fun requirePassive() = require("This trait can only be passive.", !isActive)

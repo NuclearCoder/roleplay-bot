@@ -85,3 +85,5 @@ fun String.toItemType(): Items.ItemType? = try {
 } catch (e: IllegalArgumentException) {
     null
 }
+
+fun Int.ifBetween(lo: Int, hi: Int, block: (Int) -> Unit) = this.takeIf { it in lo until hi }?.let(block)

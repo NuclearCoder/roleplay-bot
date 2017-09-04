@@ -4,7 +4,7 @@ version '1.0-SNAPSHOT'
 apply plugin: 'kotlin'
 
 buildscript {
-    ext.kotlin_version = '1.1.4-2'
+    ext.kotlin_version = '1.1.4-3'
     repositories {
         jcenter()
     }
@@ -30,33 +30,33 @@ repositories {
     // Use 'jcenter' for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
-    maven {
-        url 'https://jitpack.io'
-    }
-    maven {
-        url 'http://maven.sedmelluq.com'
-    }
-    maven {
-        url 'https://dl.bintray.com/kotlin/exposed'
-    }
+    maven { url 'https://jitpack.io' }
+    maven { url 'http://maven.sedmelluq.com' }
+    maven { url 'https://dl.bintray.com/kotlin/exposed' }
+    maven { url 'http://dl.bintray.com/jonnyzzz/maven' }
+    flatDir { dirs 'lib' }
 }
 
 // In this section you declare the dependencies for your production and test code
 dependencies {
     compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: "$kotlin_version"
     compile group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: "$kotlin_version"
-    compile group: 'com.sedmelluq', name: 'lavaplayer', version: '1.2.42'
-
-    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.43'
-    compile group: 'org.jetbrains.exposed', name: 'exposed', version: '0.8'
-    compile group: 'com.vdurmont', name: 'emoji-java', version: '3.3.0'
-
-    compile group: 'net.dv8tion', name: 'JDA', version: '3.2.0_246'
-    compile group: 'com.github.JDA-Applications', name: 'Kotlin-JDA', version: 'master-SNAPSHOT'
 
     // The production code uses the SLF4J logging API at compile time
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+
+    compile group: 'net.dv8tion', name: 'JDA', version: '3.2.0_246'
+    compile group: 'com.sedmelluq', name: 'lavaplayer', version: '1.2.42'
+    compile group: 'com.github.JDA-Applications', name: 'Kotlin-JDA', version: 'master-SNAPSHOT'
+    compile group: 'com.vdurmont', name: 'emoji-java', version: '3.3.0'
+
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.43'
+    compile group: 'org.jetbrains.exposed', name: 'exposed', version: '0.8'
+
+    compile group: 'org.jonnyzzz.kotlin.xml.bind', name: 'jdom', version: '0.1.9'
+
+    compile name: 'beautyeye_lnf'
 }
 
 jar {

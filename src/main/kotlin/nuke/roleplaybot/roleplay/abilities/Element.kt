@@ -1,7 +1,12 @@
 package nuke.roleplaybot.roleplay.abilities
 
-enum class Element {
-    FIRE, WATER, AIR, EARTH, LIGHT, DARK;
+enum class Element(val label: String) {
+    FIRE("Fire"),
+    WATER("Water"),
+    AIR("Air"),
+    EARTH("Earth"),
+    LIGHT("Light"),
+    DARK("Dark");
 
     enum class Effectiveness {
         NEUTRAL, WEAKER, STRONGER

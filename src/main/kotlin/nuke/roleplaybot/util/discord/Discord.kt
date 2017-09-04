@@ -1,10 +1,15 @@
-package nuke.roleplaybot.util
+package nuke.roleplaybot.util.discord
 
 import net.dv8tion.jda.core.MessageBuilder
+import net.dv8tion.jda.core.Permission
+import net.dv8tion.jda.core.entities.ChannelType
 import net.dv8tion.jda.core.entities.Member
 import net.dv8tion.jda.core.entities.TextChannel
 import nuke.roleplaybot.LOGGER
 import nuke.roleplaybot.URL_GET_TIMEOUT
+import nuke.roleplaybot.command.meta.CommandContext
+import nuke.roleplaybot.command.meta.command.PermissionLevel
+import nuke.roleplaybot.util.use
 import java.io.IOException
 import java.io.InputStream
 import java.net.URL
@@ -37,3 +42,19 @@ fun getInputStreamFromUrl(url: String): InputStream {
 fun Member.hasRoleForGuild(roleID: Long): Boolean {
     return this.roles.any { it.idLong == roleID }
 }
+
+fun Member.getPermissionLevel(context: CommandContext): PermissionLevel {
+    return when {
+        user.id == context.botOwner.id -> PermissionLevel.BotOwner
+        isOwner -> PermissionLevel.ServerOwner
+        hasPermission(Permission.KICK_MEMBERS) || hasPermission(Permission.BAN_MEMBERS) -> PermissionLevel.Moderator
+        context.event.channelType == ChannelType.PRIVATE -> PermissionLevel.Private
+        else -> PermissionLevel.User
+    }
+}
+
+fun Member.hasSufficientPermissions(context: CommandContext, desired: PermissionLevel): Boolean {
+    return getPermissionLevel(context) >= desired
+}
+
+typealias RMCallback = ReactionMenu.(Member) -> Unit

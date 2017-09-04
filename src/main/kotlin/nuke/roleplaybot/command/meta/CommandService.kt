@@ -7,8 +7,8 @@ import nuke.roleplaybot.command.meta.command.Command
 import nuke.roleplaybot.command.meta.registry.CommandRegistry
 import nuke.roleplaybot.command.meta.registry.RegisteredCommand
 import nuke.roleplaybot.roleplay.message.MessageHandler
-import nuke.roleplaybot.util.MessageTokenizer
-import nuke.roleplaybot.util.hasSufficientPermissions
+import nuke.roleplaybot.util.discord.MessageTokenizer
+import nuke.roleplaybot.util.discord.hasSufficientPermissions
 
 class CommandService(private val bot: RoleplayBot,
                      commandBuilder: (CommandRegistry.RegistryBuilder) -> Unit) {

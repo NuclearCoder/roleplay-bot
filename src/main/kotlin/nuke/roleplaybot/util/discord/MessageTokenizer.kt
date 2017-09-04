@@ -1,4 +1,4 @@
-package nuke.roleplaybot.util
+package nuke.roleplaybot.util.discord
 
 class MessageTokenizer(val text: String) {
 
