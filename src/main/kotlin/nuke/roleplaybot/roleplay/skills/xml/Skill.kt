@@ -24,4 +24,6 @@ class Skill {
     var variance by intOf(JXML / "damage" / "variance" / XText - "10")
 
     var effects by JXML / "effects" / XElements("effect") / XSub(SkillEffect::class.java)
+
+    var description by JXML / "description" / XText - ""
 }

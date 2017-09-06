@@ -1,6 +1,9 @@
 package nuke.roleplaybot.roleplay.skills.helper
 
 import nuke.roleplaybot.roleplay.skills.xml.SkillStore
+import nuke.roleplaybot.util.Wrapper
+import nuke.roleplaybot.util.set
+import nuke.roleplaybot.util.with
 import org.jdom2.input.SAXBuilder
 import org.jdom2.output.Format
 import org.jdom2.output.XMLOutputter
@@ -14,7 +17,7 @@ import javax.swing.JOptionPane
  * Created by NuclearCoder on 2017-09-02.
  */
 
-class DataStore(val fields: EditPanel, val list: ListPanel) {
+class DataStore(val store: Wrapper<SkillStore?>, val fields: EditPanel, val list: ListPanel) {
 
     private inline val parent get() = list.parent
 
@@ -58,7 +61,6 @@ class DataStore(val fields: EditPanel, val list: ListPanel) {
 
     private fun clearFields() {
         fields.removeAll()
-        fields.set.clear()
         list.elements.clear()
     }
 
@@ -79,9 +81,7 @@ class DataStore(val fields: EditPanel, val list: ListPanel) {
     }
 
     private fun saveSkills() {
-        //TODO
-        val skill: SkillStore
-        val element = JDOM.save(skill, SkillStore::class.java)
+        val element = store.with { JDOM.save(it, SkillStore::class.java) }
 
         file?.bufferedWriter().use {
             XMLOutputter().apply {
@@ -95,7 +95,8 @@ class DataStore(val fields: EditPanel, val list: ListPanel) {
         file?.bufferedReader().use {
             val element = SAXBuilder().build(it).rootElement
             val skill = JDOM.load(element, SkillStore::class.java)
-            //TODO
+
+            store.set(skill)
         }
     }
 

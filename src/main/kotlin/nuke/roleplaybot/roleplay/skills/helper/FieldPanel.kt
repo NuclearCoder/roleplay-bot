@@ -1,13 +1,18 @@
 package nuke.roleplaybot.roleplay.skills.helper
 
 import nuke.roleplaybot.roleplay.abilities.Element
-import nuke.roleplaybot.roleplay.skills.SkillDescriptor
 import nuke.roleplaybot.roleplay.skills.SkillScope
 import nuke.roleplaybot.roleplay.skills.SkillType
+import nuke.roleplaybot.roleplay.skills.xml.Skill
+import nuke.roleplaybot.roleplay.skills.xml.SkillStore
+import nuke.roleplaybot.util.Wrapper
 import nuke.roleplaybot.util.swing.addWithLabel
 import nuke.roleplaybot.util.swing.makeCompactGrid
+import nuke.roleplaybot.util.with
 import java.awt.BorderLayout
 import java.awt.GridLayout
+import java.awt.event.FocusEvent
+import java.awt.event.FocusListener
 import javax.swing.BorderFactory
 import javax.swing.JComboBox
 import javax.swing.JList
@@ -22,36 +27,33 @@ import javax.swing.SpringLayout
  * Created by NuclearCoder on 2017-08-25.
  */
 
-class FieldPanel(val skill: SkillDescriptor) : JPanel() {
+class FieldPanel(val store: Wrapper<SkillStore?>) : JPanel() {
+
+    private var index = -1
+    private val skill get(): Skill? = store.with { it.skills?.getOrNull(index) }
 
     val name = JTextField()
     private val message = JTextField()
-
     private val cost = JSpinner(SpinnerNumberModel(50, 0, Int.MAX_VALUE, 10))
-
     private val scope = JComboBox<SkillScope>().apply {
         renderer = CustomListCellRenderer(SkillScope::label)
         SkillScope.values().forEach(this::addItem)
     }
 
-    private val radius = JSpinner(SpinnerNumberModel(1, 0, Int.MAX_VALUE, 1))
-
-    private val description = JTextPane()
-
     private val type = JComboBox<SkillType>().apply {
         renderer = CustomListCellRenderer(SkillType::label)
         SkillType.values().forEach(this::addItem)
     }
-
     private val element = JComboBox<Element>().apply {
         renderer = CustomListCellRenderer(Element::label)
         Element.values().forEach(this::addItem)
     }
-
     private val formula = JTextField()
     private val variance = JSpinner(SpinnerNumberModel(20, 0, Int.MAX_VALUE, 10))
 
     private val effects = JList<String>()
+
+    private val description = JTextPane()
 
     init {
         /*
@@ -102,19 +104,54 @@ class FieldPanel(val skill: SkillDescriptor) : JPanel() {
 
         add(left)
         add(right)
+
+        addFocusListener(object : FocusListener {
+            override fun focusLost(e: FocusEvent) = save()
+            override fun focusGained(e: FocusEvent) = load()
+        })
+
+        select(-1)
     }
 
-    fun update() {
-        skill.name = name.text
-        skill.description = description.text
-        skill.cost = cost.value as Int
-        skill.scope = scope.selectedItem as SkillScope
-        skill.damage.type = type.selectedItem as SkillType
-        skill.damage.element = element.selectedItem as Element
-        skill.damage.formula = formula.text
-        skill.damage.variance = variance.value as Int
-        //TODO: effects here
-        skill.message = message.text
+    fun select(index: Int) {
+        save()
+
+        this.index = index
+        load()
+    }
+
+    fun save() {
+        println("Focus lost")
+        // save the fields into the skill
+        skill?.let {
+            it.name = name.text
+            it.cost = cost.value as Int
+            it.scope = scope.selectedItem as SkillScope
+            it.type = type.selectedItem as SkillType
+            it.element = element.selectedItem as Element
+            it.formula = formula.text
+            it.variance = variance.value as Int
+            //TODO: effects here
+            it.message = message.text
+            it.description = description.text
+        }
+    }
+
+    fun load() {
+        println("Focus gained")
+        // load the fields from the skill
+        skill?.let {
+            name.text = it.name
+            cost.value = it.cost
+            scope.selectedItem = it.scope
+            type.selectedItem = it.type
+            element.selectedItem = it.element
+            formula.text = it.formula
+            variance.value = it.variance
+            //TODO: effects here
+            message.text = it.message
+            description.text = it.description
+        }.let { isVisible = (it != null) }
     }
 
 }

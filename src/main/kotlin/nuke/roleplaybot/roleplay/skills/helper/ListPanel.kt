@@ -1,6 +1,7 @@
 package nuke.roleplaybot.roleplay.skills.helper
 
-import nuke.roleplaybot.roleplay.skills.SkillDescriptor
+import nuke.roleplaybot.roleplay.skills.xml.SkillStore
+import nuke.roleplaybot.util.Wrapper
 import nuke.roleplaybot.util.swing.JButton
 import nuke.roleplaybot.util.swing.text
 import java.awt.BorderLayout
@@ -19,7 +20,7 @@ import javax.swing.event.ListSelectionEvent
  * Created by NuclearCoder on 2017-08-25.
  */
 
-class ListPanel(private val fields: EditPanel) : JPanel(), DocumentListener {
+class ListPanel(val store: Wrapper<SkillStore?>, private val fields: EditPanel) : JPanel(), DocumentListener {
 
     val elements = DefaultListModel<String>()
     private val listSkills = JList<String>(elements).apply {
@@ -49,7 +50,7 @@ class ListPanel(private val fields: EditPanel) : JPanel(), DocumentListener {
         val last = elements.size
 
         elements.addElement("$last:")
-        fields.set.put(last, FieldPanel(SkillDescriptor(last)))
+        fields.select(last)
 
         listSkills.selectedIndex = last
 
@@ -61,13 +62,13 @@ class ListPanel(private val fields: EditPanel) : JPanel(), DocumentListener {
         if (cur < 0 || cur >= elements.size) return
 
         elements.remove(cur)
-        fields.set.remove(cur)
+        fields.select(cur - 1)
 
-        for (index in cur until elements.size) {
-            val comp = fields.set[index] ?: continue
+        /*for (index in cur until elements.size) {
+            val comp = store ?: continue
             comp.skill.id--
             fields.set[index - 1] = comp
-        }
+        }*/
 
         if (elements.size <= 1) buttonRemove.isEnabled = false
     }

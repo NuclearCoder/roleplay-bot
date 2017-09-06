@@ -9,5 +9,7 @@ import org.jonnyzzz.kotlin.xml.bind.jdom.JXML
  */
 
 class SkillStore {
+
     var skills by JXML / "skills" / XElements("skill") / XSub(Skill::class.java)
+
 }

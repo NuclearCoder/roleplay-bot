@@ -1,5 +1,7 @@
 package nuke.roleplaybot.roleplay.skills.helper
 
+import nuke.roleplaybot.roleplay.skills.xml.SkillStore
+import nuke.roleplaybot.util.Wrapper
 import nuke.roleplaybot.util.swing.JMenuBar
 import nuke.roleplaybot.util.swing.item
 import nuke.roleplaybot.util.swing.menu
@@ -13,10 +15,12 @@ class SkillCreationWizard : JSplitPane(JSplitPane.HORIZONTAL_SPLIT) {
         contentPane = this@SkillCreationWizard
     }
 
-    private val fields = EditPanel()
-    private val list = ListPanel(fields)
+    private val store = Wrapper<SkillStore?>(null)
 
-    private val data = DataStore(fields, list)
+    private val fields = EditPanel(store)
+    private val list = ListPanel(store, fields)
+
+    private val data = DataStore(store, fields, list)
 
     private val menuBar = JMenuBar {
         menu("File") {
