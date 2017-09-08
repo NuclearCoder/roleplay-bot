@@ -1,4 +1,4 @@
-package nuke.roleplaybot.roleplay.skills.helper
+package nuke.roleplaybot.util.swing
 
 import java.awt.Component
 import javax.swing.DefaultListCellRenderer

@@ -15,12 +15,12 @@ class SkillCreationWizard : JSplitPane(JSplitPane.HORIZONTAL_SPLIT) {
         contentPane = this@SkillCreationWizard
     }
 
-    private val store = Wrapper<SkillStore?>(null)
+    private val store = Wrapper<SkillStore?>(SkillStore())
 
-    private val fields = EditPanel(store)
-    private val list = ListPanel(store, fields)
+    private val fields = FieldPanel(this, store)
+    private val list = ListPanel(this, store)
 
-    private val data = DataStore(store, fields, list)
+    private val data = DataStore(this, store)
 
     private val menuBar = JMenuBar {
         menu("File") {
@@ -40,6 +40,22 @@ class SkillCreationWizard : JSplitPane(JSplitPane.HORIZONTAL_SPLIT) {
         container.pack()
         container.minimumSize = container.size
         container.isVisible = true
+    }
+
+    internal fun updateList() {
+        list.repaint()
+    }
+
+    internal fun selectSkill(id: Int) {
+        fields.select(id)
+    }
+
+    internal fun toggleFields(enable: Boolean) {
+        fields.toggleFields(enable)
+    }
+
+    internal fun createListEntry() {
+        list.create()
     }
 
 }

@@ -46,8 +46,7 @@ object ExperienceCalculator {
             typoMaxGain
 
     fun calculate(content: String): Long {
-        var wordCount: Int = 0
-
+        var wordCount = 0
         content.forEachWord {
             wordCount++
         }

@@ -3,7 +3,9 @@ package nuke.roleplaybot.roleplay.skills.xml
 import nuke.roleplaybot.roleplay.abilities.Element
 import nuke.roleplaybot.roleplay.skills.SkillScope
 import nuke.roleplaybot.roleplay.skills.SkillType
+import org.jonnyzzz.kotlin.xml.bind.XAttribute
 import org.jonnyzzz.kotlin.xml.bind.XElements
+import org.jonnyzzz.kotlin.xml.bind.XRoot
 import org.jonnyzzz.kotlin.xml.bind.XSub
 import org.jonnyzzz.kotlin.xml.bind.XText
 import org.jonnyzzz.kotlin.xml.bind.jdom.JXML
@@ -12,7 +14,10 @@ import org.jonnyzzz.kotlin.xml.bind.jdom.JXML
  * Created by NuclearCoder on 2017-09-03.
  */
 
-class Skill {
+@XRoot(name = "skill")
+class Skill(id: Int = -1) {
+    var id by intOf(JXML / XAttribute("id"))
+
     var name by JXML / "general" / "name" / XText - ""
     var message by JXML / "general" / "message" / XText - ""
     var scope by enumOf<SkillScope>(JXML / "general" / "scope" / XText - SkillScope.MELEE.toString())
@@ -26,4 +31,8 @@ class Skill {
     var effects by JXML / "effects" / XElements("effect") / XSub(SkillEffect::class.java)
 
     var description by JXML / "description" / XText - ""
+
+    init {
+        this.id = id
+    }
 }

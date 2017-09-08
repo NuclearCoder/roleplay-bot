@@ -39,7 +39,7 @@ fun parseTime(string: String): Int {
     if (parts.size !in 2..3)
         throw NumberFormatException("Not a time format")
 
-    var i: Int = 0
+    var i = 0
 
     val hrs = if (parts.size < 3) 0 else Integer.parseUnsignedInt(parts[i++])
     val min = Integer.parseUnsignedInt(parts[i++])

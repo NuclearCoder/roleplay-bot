@@ -14,3 +14,4 @@ fun Any?.wrap() = Wrapper(this)
 fun <T> Wrapper<T>.unwrap() = o
 
 inline fun <T, R> Wrapper<T?>.with(crossinline block: (T) -> R) = o?.let(block)
+

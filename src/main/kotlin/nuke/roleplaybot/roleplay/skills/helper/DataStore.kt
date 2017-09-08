@@ -17,13 +17,11 @@ import javax.swing.JOptionPane
  * Created by NuclearCoder on 2017-09-02.
  */
 
-class DataStore(val store: Wrapper<SkillStore?>, val fields: EditPanel, val list: ListPanel) {
-
-    private inline val parent get() = list.parent
+class DataStore(private val wizard: SkillCreationWizard, private val store: Wrapper<SkillStore?>) {//, private val fields: FieldPanel, private val list: ListPanel) {
 
     var file: File? = null
 
-    var lastSaved = true
+    var changed = true
 
     fun new() {
         when (areYouSure()) {
@@ -33,15 +31,15 @@ class DataStore(val store: Wrapper<SkillStore?>, val fields: EditPanel, val list
             JOptionPane.CANCEL_OPTION -> return
         }
 
-        clearFields()
+        wizard.toggleFields(false)
         file = null
-        list.create()
+        wizard.createListEntry()
     }
 
     fun save(saveAs: Boolean = false) {
-        if (file != null && saveAs && chooseFile(save = true)) {
+        if ((saveAs || file == null) && chooseFile(save = true) && file != null) {
             saveSkills()
-            lastSaved = true
+            changed = false
         }
     }
 
@@ -57,12 +55,7 @@ class DataStore(val store: Wrapper<SkillStore?>, val fields: EditPanel, val list
         loadSkills()
     }
 
-    private fun areYouSure() = JOptionPane.showConfirmDialog(parent, "Do you want to save changes?", "Unsaved changes", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE)
-
-    private fun clearFields() {
-        fields.removeAll()
-        list.elements.clear()
-    }
+    private fun areYouSure() = JOptionPane.showConfirmDialog(wizard, "Do you want to save changes?", "Unsaved changes", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE)
 
     /* save:   true  => save file dialog
                false => load file dialog
@@ -72,7 +65,7 @@ class DataStore(val store: Wrapper<SkillStore?>, val fields: EditPanel, val list
      */
     private fun chooseFile(save: Boolean = false): Boolean {
         val chooser = JFileChooser(file?.parent)
-        val choice = if (save) chooser.showSaveDialog(parent) else chooser.showSaveDialog(parent)
+        val choice = if (save) chooser.showSaveDialog(wizard) else chooser.showSaveDialog(wizard)
         if (choice == JFileChooser.APPROVE_OPTION) {
             file = chooser.selectedFile
             return true

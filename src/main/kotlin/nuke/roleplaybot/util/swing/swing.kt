@@ -13,6 +13,8 @@ fun trySetLNF() {
         BeautyEyeLNFHelper.launchBeautyEyeLNF()
         UIManager.put("RootPane.setupButtonVisible", false)
         BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.FrameBorderStyle.translucencySmallShadow
+
+        UIManager.put("FileChooser.useSystemExtensionHiding", false)
     } catch (e: Exception) {
         LOGGER.warn("Couldn't use bundled look-and-feel, falling back to system LNF...")
         // try system lnf

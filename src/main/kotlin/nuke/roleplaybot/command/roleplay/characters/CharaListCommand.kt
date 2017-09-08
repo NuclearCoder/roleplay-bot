@@ -25,7 +25,7 @@ object CharaListCommand : Command() {
                 }
 
                 if (!characters.empty()) {
-                    val list = characters.map { it[Characters.name] }.joinToString(prefix = "```\n", separator = "\n", postfix = "```")
+                    val list = characters.joinToString(prefix = "```\n", separator = "\n", postfix = "```") { it[Characters.name] }
                     context.reply("here are the characters created by this user.\n$list")
                 } else {
                     context.replyFail("this user has no character.")

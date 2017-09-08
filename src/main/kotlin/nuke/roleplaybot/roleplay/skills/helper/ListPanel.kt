@@ -1,29 +1,27 @@
 package nuke.roleplaybot.roleplay.skills.helper
 
 import nuke.roleplaybot.roleplay.skills.xml.SkillStore
+import nuke.roleplaybot.roleplay.skills.xml.create
+import nuke.roleplaybot.roleplay.skills.xml.removeAt
 import nuke.roleplaybot.util.Wrapper
 import nuke.roleplaybot.util.swing.JButton
-import nuke.roleplaybot.util.swing.text
 import java.awt.BorderLayout
 import java.awt.FlowLayout
 import javax.swing.BorderFactory
-import javax.swing.DefaultListModel
 import javax.swing.JList
 import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.ListSelectionModel
-import javax.swing.event.DocumentEvent
-import javax.swing.event.DocumentListener
 import javax.swing.event.ListSelectionEvent
 
 /**
  * Created by NuclearCoder on 2017-08-25.
  */
 
-class ListPanel(val store: Wrapper<SkillStore?>, private val fields: EditPanel) : JPanel(), DocumentListener {
+class ListPanel(private val wizard: SkillCreationWizard, private val store: Wrapper<SkillStore?>) : JPanel() {
 
-    val elements = DefaultListModel<String>()
-    private val listSkills = JList<String>(elements).apply {
+    private val model = WrapperListModel(store)
+    private val listSkills = JList(model).apply {
         selectionMode = ListSelectionModel.SINGLE_SELECTION
         addListSelectionListener(this@ListPanel::updateSelected)
     }
@@ -41,52 +39,40 @@ class ListPanel(val store: Wrapper<SkillStore?>, private val fields: EditPanel) 
             add(buttonRemove)
         }, BorderLayout.SOUTH)
 
-        fields.nameListener = this
-
         create()
     }
 
     fun create() {
-        val last = elements.size
+        val last = model.size
 
-        elements.addElement("$last:")
-        fields.select(last)
+        store.create()
 
+        if (model.size > 0) wizard.toggleFields(true)
+
+        wizard.selectSkill(last)
         listSkills.selectedIndex = last
 
-        if (elements.size > 1) buttonRemove.isEnabled = true
+        wizard.repaint()
     }
 
     fun remove() {
         val cur = listSkills.selectedIndex
-        if (cur < 0 || cur >= elements.size) return
+        if (cur < 0 || cur >= model.size) return
 
-        elements.remove(cur)
-        fields.select(cur - 1)
+        store.removeAt(cur)
 
-        /*for (index in cur until elements.size) {
-            val comp = store ?: continue
-            comp.skill.id--
-            fields.set[index - 1] = comp
-        }*/
+        if (model.size == 0) wizard.toggleFields(false)
 
-        if (elements.size <= 1) buttonRemove.isEnabled = false
+        wizard.selectSkill(cur - 1)
+        listSkills.selectedIndex = cur - 1
+
+        wizard.repaint()
     }
 
     private fun updateSelected(e: ListSelectionEvent) {
         if (!e.valueIsAdjusting) {
-            fields.select(listSkills.selectedIndex)
+            wizard.selectSkill(listSkills.selectedIndex)
         }
     }
-
-    private fun updateName(text: String) {
-        listSkills.selectedIndex.let {
-            elements[it] = "$it: $text"
-        }
-    }
-
-    override fun changedUpdate(e: DocumentEvent) = updateName(e.document.text)
-    override fun insertUpdate(e: DocumentEvent) = updateName(e.document.text)
-    override fun removeUpdate(e: DocumentEvent) = updateName(e.document.text)
 
 }
